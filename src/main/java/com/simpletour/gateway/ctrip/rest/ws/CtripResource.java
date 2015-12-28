@@ -15,8 +15,8 @@ import javax.ws.rs.core.MediaType;
  * Created by songfujie on 15/10/28.
  */
 @Path("ctrip")
-@Consumes({MediaType.APPLICATION_JSON})
-@Produces({MediaType.APPLICATION_JSON})
+@Consumes({MediaType.APPLICATION_XML})
+@Produces({MediaType.APPLICATION_XML})
 @Component
 public class CtripResource extends BaseRESTfulService {
 

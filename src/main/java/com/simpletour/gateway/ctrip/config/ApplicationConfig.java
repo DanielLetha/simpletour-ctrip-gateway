@@ -17,7 +17,7 @@ public class ApplicationConfig extends ResourceConfig {
         /**
          * 配置各模块的包路径供jersey container扫描
          */
-        packages("com.simpletour.gateway.mobile.rest",
+        packages("com.simpletour.gateway.ctrip.rest",
                 "com.simpletour.common.restful.exception",
                 "com.simpletour.common.restful.service");
         /**
