@@ -5,10 +5,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.simpletour</groupId>
-    <artifactId>simpletour-mobile-gateway</artifactId>
+    <artifactId>simpletour-ctrip-gateway</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
-    <name>Mobile-Gateway-Server</name>
+    <name>Simpletour-Ctrip-Gateway-Server</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
