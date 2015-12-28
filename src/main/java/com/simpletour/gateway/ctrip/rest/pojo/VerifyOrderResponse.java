@@ -8,7 +8,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * Created by Jeff.Song on 2015/12/28.
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-@XmlRootElement
+@XmlRootElement(name = "response")
 public class VerifyOrderResponse {
 
     /**

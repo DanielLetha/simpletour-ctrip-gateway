@@ -27,6 +27,6 @@ public class ApplicationConfig extends ResourceConfig {
         /**
          *jersey采用jacksonFeature进行object-json映射
          */
-//        register(JacksonFeature.class);
+        register(JacksonFeature.class);
     }
 }
