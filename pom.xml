@@ -29,7 +29,12 @@
         <dependency>
             <groupId>com.simpletour.common</groupId>
             <artifactId>common-restful</artifactId>
-            <version>1.1-SNAPSHOT</version>
+            <version>${simpletour.common.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.simpletour.common</groupId>
+            <artifactId>common-utils</artifactId>
+            <version>${simpletour.common.version}</version>
         </dependency>
         <dependency>
             <groupId>com.simpletour</groupId>

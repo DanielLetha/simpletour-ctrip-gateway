@@ -1,6 +1,8 @@
 package com.simpletour.gateway.ctrip.rest.pojo;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.simpletour.gateway.ctrip.rest.pojo.type.ResponseBodyType;
+import com.simpletour.gateway.ctrip.rest.pojo.type.ResponseHeaderType;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -11,39 +13,27 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "response")
 public class VerifyOrderResponse {
 
-    /**
-     * 0000成功
-     */
-    private String resultCode;
+    private ResponseHeaderType header;
 
-    private String resultMessage;
 
     /**
      * 库存信息，不是必须字段，但当库存不足时，需要反馈库存数量
      */
-    private int inventory;
+    private ResponseBodyType body;
 
-    public String getResultCode() {
-        return resultCode;
+    public ResponseHeaderType getHeader() {
+        return header;
     }
 
-    public void setResultCode(String resultCode) {
-        this.resultCode = resultCode;
+    public void setHeader(ResponseHeaderType header) {
+        this.header = header;
     }
 
-    public String getResultMessage() {
-        return resultMessage;
+    public ResponseBodyType getBody() {
+        return body;
     }
 
-    public void setResultMessage(String resultMessage) {
-        this.resultMessage = resultMessage;
-    }
-
-    public int getInventory() {
-        return inventory;
-    }
-
-    public void setInventory(int inventory) {
-        this.inventory = inventory;
+    public void setBody(ResponseBodyType body) {
+        this.body = body;
     }
 }

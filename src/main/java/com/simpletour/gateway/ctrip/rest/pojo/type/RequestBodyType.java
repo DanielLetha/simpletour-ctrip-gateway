@@ -2,6 +2,7 @@ package com.simpletour.gateway.ctrip.rest.pojo.type;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
 
@@ -9,11 +10,12 @@ import java.util.List;
  * Created by Jeff.Song on 2015/12/28.
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-public class BodyType {
+@XmlRootElement(name = "body")
+public class RequestBodyType {
 
     private String productId;
     private String price;
-    private String count;
+    private Integer count;
     private String contactName;
     private String contactMobile;
     private String contactIdCardType;//1：身份证；2：护照；3：学生证；4：军人证；6：驾驶证；7：回乡证；8：台胞证；10：港澳通行证；11：国际海员证；20：外国人永久居留证；22：台湾通行证；99：其他
@@ -40,11 +42,11 @@ public class BodyType {
         this.price = price;
     }
 
-    public String getCount() {
+    public Integer getCount() {
         return count;
     }
 
-    public void setCount(String count) {
+    public void setCount(Integer count) {
         this.count = count;
     }
 

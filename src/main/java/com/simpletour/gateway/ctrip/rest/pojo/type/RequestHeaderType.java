@@ -2,11 +2,14 @@ package com.simpletour.gateway.ctrip.rest.pojo.type;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
  * Created by Jeff.Song on 2015/12/28.
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-public class HeaderType {
+@XmlRootElement(name = "header")
+public class RequestHeaderType {
 
     private String accountId;
     private String serviceName;

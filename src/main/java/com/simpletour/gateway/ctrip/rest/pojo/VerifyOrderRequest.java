@@ -1,8 +1,8 @@
 package com.simpletour.gateway.ctrip.rest.pojo;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.simpletour.gateway.ctrip.rest.pojo.type.BodyType;
-import com.simpletour.gateway.ctrip.rest.pojo.type.HeaderType;
+import com.simpletour.gateway.ctrip.rest.pojo.type.RequestBodyType;
+import com.simpletour.gateway.ctrip.rest.pojo.type.RequestHeaderType;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -13,23 +13,23 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "request")
 public class VerifyOrderRequest {
 
-    private HeaderType header;
+    private RequestHeaderType header;
 
-    private BodyType body;
+    private RequestBodyType body;
 
-    public HeaderType getHeader() {
+    public RequestHeaderType getHeader() {
         return header;
     }
 
-    public void setHeader(HeaderType header) {
+    public void setHeader(RequestHeaderType header) {
         this.header = header;
     }
 
-    public BodyType getBody() {
+    public RequestBodyType getBody() {
         return body;
     }
 
-    public void setBody(BodyType body) {
+    public void setBody(RequestBodyType body) {
         this.body = body;
     }
 }
