@@ -1,4 +1,4 @@
-package com.simpletour.gateway.ctrip.rest.pojo.type;
+package com.simpletour.gateway.ctrip.rest.pojo.type.orderType;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 

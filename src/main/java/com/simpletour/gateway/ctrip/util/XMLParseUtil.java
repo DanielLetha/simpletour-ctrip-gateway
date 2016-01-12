@@ -13,7 +13,7 @@ import java.io.StringWriter;
  */
 public class XMLParseUtil {
 
-    /**
+        /**
      * JavaBean转换成xml
      * 默认编码UTF-8
      *
@@ -69,4 +69,24 @@ public class XMLParseUtil {
 
         return t;
     }
+
+    /**
+     * xml去掉头信息
+     *
+     * @param xml xml
+     * @return
+     */
+    public static String subStringForXML(String xml) {
+        String xmlString;
+        try {
+            int pos = xml.lastIndexOf("?>");
+            xmlString = xml.substring(pos + 2, xml.length());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return xmlString;
+    }
+
+
 }

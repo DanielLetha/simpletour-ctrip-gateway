@@ -1,4 +1,4 @@
-package com.simpletour.gateway.ctrip.rest.pojo.type;
+package com.simpletour.gateway.ctrip.rest.pojo.type.orderType;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -13,6 +13,8 @@ import java.util.List;
 @XmlRootElement(name = "body")
 public class RequestBodyType {
 
+    private String otaOrderId;
+    private String vendorOrderId;
     private String productId;
     private String price;
     private Integer count;
@@ -25,6 +27,22 @@ public class RequestBodyType {
     private String useDate;
     private String useEndDate;
     private ExtendInfoType extendInfo;
+
+    public String getOtaOrderId() {
+        return otaOrderId;
+    }
+
+    public void setOtaOrderId(String otaOrderId) {
+        this.otaOrderId = otaOrderId;
+    }
+
+    public String getVendorOrderId() {
+        return vendorOrderId;
+    }
+
+    public void setVendorOrderId(String vendorOrderId) {
+        this.vendorOrderId = vendorOrderId;
+    }
 
     public String getProductId() {
         return productId;
@@ -115,6 +133,9 @@ public class RequestBodyType {
     }
 
     public ExtendInfoType getExtendInfo() {
+        if(this.extendInfo == null){
+            this.extendInfo = new ExtendInfoType();
+        }
         return extendInfo;
     }
 

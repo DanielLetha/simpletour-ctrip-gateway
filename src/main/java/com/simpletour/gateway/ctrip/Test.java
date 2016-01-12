@@ -2,7 +2,7 @@ package com.simpletour.gateway.ctrip;
 
 import com.simpletour.common.utils.MD5;
 import com.simpletour.gateway.ctrip.rest.pojo.VerifyOrderRequest;
-import com.simpletour.gateway.ctrip.rest.pojo.type.RequestBodyType;
+import com.simpletour.gateway.ctrip.rest.pojo.type.orderType.RequestBodyType;
 import com.simpletour.gateway.ctrip.rest.pojo.type.RequestHeaderType;
 import com.simpletour.gateway.ctrip.util.XMLParseUtil;
 import sun.misc.BASE64Encoder;

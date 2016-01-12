@@ -1,46 +1,41 @@
 package com.simpletour.gateway.ctrip.rest.pojo;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.simpletour.gateway.ctrip.rest.pojo.type.orderType.ResponseBodyType;
 import com.simpletour.gateway.ctrip.rest.pojo.type.ResponseHeaderType;
+import com.simpletour.gateway.ctrip.rest.pojo.type.transType.ResponseBodyTypeForTrans;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * Created by Jeff.Song on 2015/12/28.
+ * Created by Mario on 2016/1/12.
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 @XmlRootElement(name = "response")
-public class VerifyOrderResponse {
+public class VerifyTransResponse {
 
     /**
      * 返回响应头
      */
     private ResponseHeaderType header;
 
-
     /**
-     * 库存信息，不是必须字段，但当库存不足时，需要反馈库存数量
+     * 返回响应体
      */
-    private ResponseBodyType body;
-
-    /**
-     * constructor
-     */
-    public VerifyOrderResponse() {
-    }
+    private ResponseBodyTypeForTrans body;
 
     /**
      * constructor
-     *
-     * @param header
-     * @param body
      */
-    public VerifyOrderResponse(ResponseHeaderType header, ResponseBodyType body) {
+    VerifyTransResponse(){}
+
+    public VerifyTransResponse(ResponseHeaderType header, ResponseBodyTypeForTrans body) {
         this.header = header;
         this.body = body;
     }
 
+    /**
+     * setter & getter
+     */
     public ResponseHeaderType getHeader() {
         return header;
     }
@@ -49,11 +44,11 @@ public class VerifyOrderResponse {
         this.header = header;
     }
 
-    public ResponseBodyType getBody() {
+    public ResponseBodyTypeForTrans getBody() {
         return body;
     }
 
-    public void setBody(ResponseBodyType body) {
+    public void setBody(ResponseBodyTypeForTrans body) {
         this.body = body;
     }
 }
