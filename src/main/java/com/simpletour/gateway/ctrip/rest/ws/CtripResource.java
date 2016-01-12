@@ -100,5 +100,4 @@ public class CtripResource extends BaseRESTfulService {
     public VerifyTransResponse queryBusNo(String request) {
         return ctripTransService.queryBusNo(request);
     }
-
 }
