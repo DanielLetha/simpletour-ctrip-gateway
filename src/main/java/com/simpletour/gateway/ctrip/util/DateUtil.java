@@ -47,7 +47,12 @@ public class DateUtil {
         return dateStr;
     }
 
-
+    /**
+     * 将long型时间转化为String
+     *
+     * @param time
+     * @return
+     */
     public static String convertLongToTime(Long time) {
 
         String hour = SecondParserUtil.parseHour(time);
