@@ -19,6 +19,29 @@
 
     <context:property-placeholder location="classpath:db.properties,classpath:redis.properties"/>
 
+    <bean id="redisManager" class="com.simpletour.redis.RedisClientManager" init-method="init" destroy-method="destory">
+        <!--<property name="masterIp">-->
+        <!--<value>192.168.2.65:6379</value>-->
+        <!--</property>-->
+        <property name="clusterIps">
+            <list value-type="java.lang.String">
+                <!--<value>192.168.40.128:6379</value>-->
+                <!--<value>192.168.2.76:6380</value>-->
+                <!--<value>192.168.2.76:6381</value>-->
+                <!--<value>192.168.2.76:6382</value>-->
+                <!--<value>192.168.2.105:7380</value>-->
+                <!--<value>192.168.2.105:7381</value>-->
+                <!--<value>192.168.2.105:7382</value>-->
+                <value>192.168.2.65:7000</value>
+                <value>192.168.2.65:7001</value>
+                <value>192.168.2.65:7002</value>
+                <value>192.168.2.65:7003</value>
+                <value>192.168.2.65:7004</value>
+                <value>192.168.2.65:7005</value>
+            </list>
+        </property>
+    </bean>
+
     <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
           destroy-method="close" scope="singleton">
         <property name="driverClassName" value="${db.driver}"/>

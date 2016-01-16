@@ -12,14 +12,13 @@ import com.simpletour.domain.order.OrderItem;
 import com.simpletour.domain.order.OrderStatus;
 import com.simpletour.domain.user.User;
 import com.simpletour.gateway.ctrip.error.CtripOrderError;
+import com.simpletour.gateway.ctrip.rest.pojo.VerifyOrderRequest;
 import com.simpletour.gateway.ctrip.rest.pojo.VerifyOrderResponse;
 import com.simpletour.gateway.ctrip.rest.pojo.bo.CtripOrderBo;
-import com.simpletour.gateway.ctrip.rest.pojo.bo.VerifyCtripRequestBo;
-import com.simpletour.gateway.ctrip.rest.pojo.type.orderType.ResponseBodyType;
 import com.simpletour.gateway.ctrip.rest.pojo.type.ResponseHeaderType;
+import com.simpletour.gateway.ctrip.rest.pojo.type.orderType.ResponseBodyType;
 import com.simpletour.gateway.ctrip.rest.service.CtripOrderService;
 import com.simpletour.gateway.ctrip.util.DateUtil;
-import com.simpletour.gateway.ctrip.validator.CtripValidator;
 import com.simpletour.service.order.IOrderService;
 import com.simpletour.service.sms.ISMSService;
 import com.simpletour.service.user.UserService;
@@ -57,16 +56,10 @@ public class CtripOrderServiceImpl implements CtripOrderService {
     private UserService userService;
 
     @Override
-    public VerifyOrderResponse verifyOrder(String request) {
-        //对请求做初步验证
-        CtripValidator ctripValidator = new CtripValidator();
-        VerifyCtripRequestBo verifyCtripRequestBo = ctripValidator.validateOrderPre(request);
-        if (verifyCtripRequestBo.getVerifyOrderResponse() != null) {
-            return verifyCtripRequestBo.getVerifyOrderResponse();
-        }
+    public VerifyOrderResponse verifyOrder(VerifyOrderRequest verifyOrderRequest) {
 
         //获取转化为实体后的数据,并对数据进行组装
-        CtripOrderBo ctripOrderBo = new CtripOrderBo(verifyCtripRequestBo.getVerifyOrderRequest().getHeader(), verifyCtripRequestBo.getVerifyOrderRequest().getBody());
+        CtripOrderBo ctripOrderBo = new CtripOrderBo(verifyOrderRequest.getHeader(), verifyOrderRequest.getBody());
         //传入order模块,进行业务单元处理
         Order order = ctripOrderBo.asOrder();
         try {
@@ -94,16 +87,10 @@ public class CtripOrderServiceImpl implements CtripOrderService {
     }
 
     @Override
-    public VerifyOrderResponse createOrder(String request) {
-        //对请求做初步验证
-        CtripValidator orderValidator = new CtripValidator();
-        VerifyCtripRequestBo verifyOrderRequestBo = orderValidator.validateOrderPre(request);
-        if (verifyOrderRequestBo.getVerifyOrderResponse() != null) {
-            return verifyOrderRequestBo.getVerifyOrderResponse();
-        }
+    public VerifyOrderResponse createOrder(VerifyOrderRequest verifyOrderRequest) {
 
         //获取转化为实体后的数据,并对数据进行组装
-        CtripOrderBo ctripOrderBo = new CtripOrderBo(verifyOrderRequestBo.getVerifyOrderRequest().getHeader(), verifyOrderRequestBo.getVerifyOrderRequest().getBody());
+        CtripOrderBo ctripOrderBo = new CtripOrderBo(verifyOrderRequest.getHeader(), verifyOrderRequest.getBody());
         //传入order模块,进行业务单元处理
         Order order = ctripOrderBo.asOrder();
 
@@ -147,16 +134,9 @@ public class CtripOrderServiceImpl implements CtripOrderService {
     }
 
     @Override
-    public VerifyOrderResponse cancelOrder(String request) {
-        //对请求做初步验证
-        CtripValidator orderValidator = new CtripValidator();
-        VerifyCtripRequestBo verifyOrderRequestBo = orderValidator.validateOrderPre(request);
-        if (verifyOrderRequestBo.getVerifyOrderResponse() != null) {
-            return verifyOrderRequestBo.getVerifyOrderResponse();
-        }
-
+    public VerifyOrderResponse cancelOrder(VerifyOrderRequest verifyOrderRequest) {
         //获取转化为实体后的数据,并对数据进行组装
-        CtripOrderBo ctripOrderStatusBo = new CtripOrderBo(verifyOrderRequestBo.getVerifyOrderRequest().getHeader(), verifyOrderRequestBo.getVerifyOrderRequest().getBody());
+        CtripOrderBo ctripOrderStatusBo = new CtripOrderBo(verifyOrderRequest.getHeader(), verifyOrderRequest.getBody());
         //传入orderStatus模块,进行业务单元处理
         OrderStatus orderStatus = ctripOrderStatusBo.asOrderStatus();
         Optional<OrderStatus> orderStatusOptional;
@@ -185,15 +165,9 @@ public class CtripOrderServiceImpl implements CtripOrderService {
     }
 
     @Override
-    public VerifyOrderResponse queryOrder(String request) {
-        //对请求做初步验证
-        CtripValidator orderValidator = new CtripValidator();
-        VerifyCtripRequestBo verifyOrderRequestBo = orderValidator.validateOrderPre(request);
-        if (verifyOrderRequestBo.getVerifyOrderResponse() != null) {
-            return verifyOrderRequestBo.getVerifyOrderResponse();
-        }
+    public VerifyOrderResponse queryOrder(VerifyOrderRequest verifyOrderRequest) {
         //获取转化为实体后的数据,并对数据进行组装
-        CtripOrderBo ctripOrderBo = new CtripOrderBo(verifyOrderRequestBo.getVerifyOrderRequest().getHeader(), verifyOrderRequestBo.getVerifyOrderRequest().getBody());
+        CtripOrderBo ctripOrderBo = new CtripOrderBo(verifyOrderRequest.getHeader(), verifyOrderRequest.getBody());
         //传入order模块,进行业务单元处理
         Order order = ctripOrderBo.asOrder();
 
@@ -210,16 +184,9 @@ public class CtripOrderServiceImpl implements CtripOrderService {
     }
 
     @Override
-    public VerifyOrderResponse resend(String request) {
-        //对请求做初步验证
-        CtripValidator orderValidator = new CtripValidator();
-        VerifyCtripRequestBo verifyOrderRequestBo = orderValidator.validateOrderPre(request);
-        if (verifyOrderRequestBo.getVerifyOrderResponse() != null) {
-            return verifyOrderRequestBo.getVerifyOrderResponse();
-        }
-
+    public VerifyOrderResponse resend(VerifyOrderRequest verifyOrderRequest) {
         //获取转化为实体后的数据,并对数据进行组装
-        CtripOrderBo ctripOrderBo = new CtripOrderBo(verifyOrderRequestBo.getVerifyOrderRequest().getHeader(), verifyOrderRequestBo.getVerifyOrderRequest().getBody());
+        CtripOrderBo ctripOrderBo = new CtripOrderBo(verifyOrderRequest.getHeader(), verifyOrderRequest.getBody());
         //传入order模块,进行业务单元处理
         Order order = ctripOrderBo.asOrder();
 

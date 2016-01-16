@@ -11,19 +11,9 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 @XmlRootElement(name = "request")
-public class VerifyOrderRequest {
-
-    private RequestHeaderType header;
+public class VerifyOrderRequest extends VerifyRequest{
 
     private RequestBodyType body;
-
-    public RequestHeaderType getHeader() {
-        return header;
-    }
-
-    public void setHeader(RequestHeaderType header) {
-        this.header = header;
-    }
 
     public RequestBodyType getBody() {
         return body;

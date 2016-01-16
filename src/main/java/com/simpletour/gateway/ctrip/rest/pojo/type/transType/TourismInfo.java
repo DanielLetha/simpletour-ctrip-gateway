@@ -6,7 +6,11 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
  * Created by Mario on 2016/1/12.
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-public class BusNoInfo {
+public class TourismInfo {
+    /**
+     * 行程id
+     */
+    private Long tourismId;
     /**
      * 到达地
      */
@@ -24,26 +28,34 @@ public class BusNoInfo {
      */
     private String departTime;
     /**
-     * 距离
+     * 行程名称
      */
-    private Integer distance;
-    /**
-     * 车次号
-     */
-    private String no;
+    private String name;
 
-    public BusNoInfo(String arrive, String depart, String arriveTime, String departTime, Integer distance, String no) {
+    /**
+     * constructor
+     */
+    public TourismInfo(Long tourismId, String arrive, String depart, String arriveTime, String departTime, String name) {
+        this.tourismId = tourismId;
         this.arrive = arrive;
         this.depart = depart;
         this.arriveTime = arriveTime;
         this.departTime = departTime;
-        this.distance = distance;
-        this.no = no;
+        this.name = name;
     }
+
 
     /**
      * setter & getter
      */
+    public Long getTourismId() {
+        return tourismId;
+    }
+
+    public void setTourismId(Long tourismId) {
+        this.tourismId = tourismId;
+    }
+
     public String getArrive() {
         return arrive;
     }
@@ -76,19 +88,11 @@ public class BusNoInfo {
         this.departTime = departTime;
     }
 
-    public Integer getDistance() {
-        return distance;
+    public String getName() {
+        return name;
     }
 
-    public void setDistance(Integer distance) {
-        this.distance = distance;
-    }
-
-    public String getNo() {
-        return no;
-    }
-
-    public void setNo(String no) {
-        this.no = no;
+    public void setName(String name) {
+        this.name = name;
     }
 }

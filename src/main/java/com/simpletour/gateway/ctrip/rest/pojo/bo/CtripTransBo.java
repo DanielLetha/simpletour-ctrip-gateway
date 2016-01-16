@@ -1,5 +1,6 @@
 package com.simpletour.gateway.ctrip.rest.pojo.bo;
 
+import com.simpletour.domain.product.Tourism;
 import com.simpletour.domain.traveltrans.BusNo;
 import com.simpletour.gateway.ctrip.rest.pojo.VerifyTransRequest;
 import com.simpletour.gateway.ctrip.rest.pojo.VerifyTransResponse;
@@ -46,17 +47,14 @@ public class CtripTransBo {
         this.requestBodyTypeForTrans = requestBodyTypeForTrans;
     }
 
-    /**
-     * 对busNo进行实体封装
-     *
-     * @return
-     */
-    public BusNo asBusNo() {
-        BusNo busNo = new BusNo();
-        busNo.setDepart(this.requestBodyTypeForTrans.getDepart());
-        busNo.setArrive(this.requestBodyTypeForTrans.getArrive());
+    public Tourism asTourism(){
+        Tourism tourism = new Tourism();
+        tourism.setDepart(this.requestBodyTypeForTrans.getDepart());
+        tourism.setArrive(this.requestBodyTypeForTrans.getArrive());
+        tourism.setId(this.requestBodyTypeForTrans.getTourismId());
 
-        return busNo;
+        return tourism;
     }
+
 }
 

@@ -11,13 +11,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 @XmlRootElement(name = "response")
-public class VerifyOrderResponse {
-
-    /**
-     * 返回响应头
-     */
-    private ResponseHeaderType header;
-
+public class VerifyOrderResponse extends VerifyResponse {
 
     /**
      * 库存信息，不是必须字段，但当库存不足时，需要反馈库存数量
@@ -30,25 +24,14 @@ public class VerifyOrderResponse {
     public VerifyOrderResponse() {
     }
 
-    /**
-     * constructor
-     *
-     * @param header
-     * @param body
-     */
     public VerifyOrderResponse(ResponseHeaderType header, ResponseBodyType body) {
         this.header = header;
         this.body = body;
     }
 
-    public ResponseHeaderType getHeader() {
-        return header;
-    }
-
-    public void setHeader(ResponseHeaderType header) {
-        this.header = header;
-    }
-
+    /**
+     * setter & getter
+     */
     public ResponseBodyType getBody() {
         return body;
     }

@@ -1,5 +1,6 @@
 package com.simpletour.gateway.ctrip.rest.service;
 
+import com.simpletour.gateway.ctrip.rest.pojo.VerifyTransRequest;
 import com.simpletour.gateway.ctrip.rest.pojo.VerifyTransResponse;
 
 /**
@@ -9,8 +10,8 @@ public interface CtripTransService {
     /**
      * 查询车次接口
      *
-     * @param request 请求文
+     * @param verifyTransRequest 请求实体
      * @return
      */
-    VerifyTransResponse queryBusNo(String request);
+    VerifyTransResponse queryTourism(VerifyTransRequest verifyTransRequest);
 }

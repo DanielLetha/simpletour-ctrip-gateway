@@ -11,19 +11,9 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 @XmlRootElement(name = "request")
-public class VerifyTransRequest {
-
-    private RequestHeaderType header;
+public class VerifyTransRequest extends VerifyRequest{
 
     private RequestBodyTypeForTrans body;
-
-    public RequestHeaderType getHeader() {
-        return header;
-    }
-
-    public void setHeader(RequestHeaderType header) {
-        this.header = header;
-    }
 
     public RequestBodyTypeForTrans getBody() {
         return body;

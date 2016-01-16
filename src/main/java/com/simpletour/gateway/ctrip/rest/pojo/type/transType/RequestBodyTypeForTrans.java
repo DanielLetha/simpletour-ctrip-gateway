@@ -10,6 +10,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 @XmlRootElement(name = "body")
 public class RequestBodyTypeForTrans {
+
+    /**
+     * 行程id
+     */
+    private Long tourismId;
     /**
      * 出发地
      */
@@ -36,4 +41,11 @@ public class RequestBodyTypeForTrans {
         this.arrive = arrive;
     }
 
+    public Long getTourismId() {
+        return tourismId;
+    }
+
+    public void setTourismId(Long tourismId) {
+        this.tourismId = tourismId;
+    }
 }

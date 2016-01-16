@@ -1,5 +1,6 @@
 package com.simpletour.gateway.ctrip.rest.service;
 
+import com.simpletour.gateway.ctrip.rest.pojo.VerifyOrderRequest;
 import com.simpletour.gateway.ctrip.rest.pojo.VerifyOrderResponse;
 
 /**
@@ -9,40 +10,40 @@ public interface CtripOrderService {
     /**
      * 验证订单接口
      *
-     * @param request 请求文
+     * @param verifyOrderRequest 请求实体
      * @return
      */
-    VerifyOrderResponse verifyOrder(String request);
+    VerifyOrderResponse verifyOrder(VerifyOrderRequest verifyOrderRequest);
 
     /**
      * 订单下单接口
      *
-     * @param request 请求文
+     * @param verifyOrderRequest 请求实体
      * @return
      */
-    VerifyOrderResponse createOrder(String request);
+    VerifyOrderResponse createOrder(VerifyOrderRequest verifyOrderRequest);
 
     /**
      * 订单取消接口
      *
-     * @param request 请求文
+     * @param verifyOrderRequest 请求实体
      * @return
      */
-    VerifyOrderResponse cancelOrder(String request);
+    VerifyOrderResponse cancelOrder(VerifyOrderRequest verifyOrderRequest);
 
     /**
      * 订单查询接口
      *
-     * @param request 请求文
+     * @param verifyOrderRequest 请求实体
      * @return
      */
-    VerifyOrderResponse queryOrder(String request);
+    VerifyOrderResponse queryOrder(VerifyOrderRequest verifyOrderRequest);
 
     /**
      * 凭证重发接口
      *
-     * @param request 请求文
+     * @param verifyOrderRequest 请求实体
      * @return
      */
-    VerifyOrderResponse resend(String request);
+    VerifyOrderResponse resend(VerifyOrderRequest verifyOrderRequest);
 }

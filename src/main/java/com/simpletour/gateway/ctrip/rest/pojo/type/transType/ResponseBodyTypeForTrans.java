@@ -17,14 +17,14 @@ public class ResponseBodyTypeForTrans {
     /**
      * 车次列表
      */
-    private List<BusNoInfo> busNoInfos;
+    private List<TourismInfo> tourismInfos;
 
     ResponseBodyTypeForTrans() {
     }
 
-    public ResponseBodyTypeForTrans(Integer count, List<BusNoInfo> busNoInfos) {
+    public ResponseBodyTypeForTrans(Integer count, List<TourismInfo> tourismInfos) {
         this.count = count;
-        this.busNoInfos = busNoInfos;
+        this.tourismInfos = tourismInfos;
     }
 
     public Integer getCount() {
@@ -35,11 +35,12 @@ public class ResponseBodyTypeForTrans {
         this.count = count;
     }
 
-    public List<BusNoInfo> getBusNoInfos() {
-        return busNoInfos;
+    public List<TourismInfo> getTourismInfos() {
+        return tourismInfos;
     }
 
-    public void setBusNoInfos(List<BusNoInfo> busNoInfos) {
-        this.busNoInfos = busNoInfos;
+    public void setTourismInfos(List<TourismInfo> tourismInfos) {
+        this.tourismInfos = tourismInfos;
     }
+
 }

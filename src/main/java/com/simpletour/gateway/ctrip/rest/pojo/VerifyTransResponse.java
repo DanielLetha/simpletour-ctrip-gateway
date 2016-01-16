@@ -11,12 +11,8 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 @XmlRootElement(name = "response")
-public class VerifyTransResponse {
+public class VerifyTransResponse extends VerifyResponse {
 
-    /**
-     * 返回响应头
-     */
-    private ResponseHeaderType header;
 
     /**
      * 返回响应体
@@ -26,7 +22,8 @@ public class VerifyTransResponse {
     /**
      * constructor
      */
-    VerifyTransResponse(){}
+    VerifyTransResponse() {
+    }
 
     public VerifyTransResponse(ResponseHeaderType header, ResponseBodyTypeForTrans body) {
         this.header = header;
@@ -36,14 +33,6 @@ public class VerifyTransResponse {
     /**
      * setter & getter
      */
-    public ResponseHeaderType getHeader() {
-        return header;
-    }
-
-    public void setHeader(ResponseHeaderType header) {
-        this.header = header;
-    }
-
     public ResponseBodyTypeForTrans getBody() {
         return body;
     }
