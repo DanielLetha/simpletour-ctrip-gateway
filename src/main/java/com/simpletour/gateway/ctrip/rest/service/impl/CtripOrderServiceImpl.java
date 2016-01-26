@@ -101,7 +101,7 @@ public class CtripOrderServiceImpl implements CtripOrderService {
             AndConditionSet andConditionSet = new AndConditionSet();
             andConditionSet.addCondition("sourceOrderId", order.getSourceOrderId(), Condition.MatchType.eq);
             List<Order> orders = orderService.findOrdersByConditions(andConditionSet, IBaseDao.SortBy.ASC);
-            if (orders != null)
+            if (!(orders == null || orders.isEmpty()))
                 return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.ORDER_HAS_BEEN_USED), new ResponseBodyType(0));
         }
         //验证传进来的用户是否存在,如果有用户则通过,没有则创建用户
