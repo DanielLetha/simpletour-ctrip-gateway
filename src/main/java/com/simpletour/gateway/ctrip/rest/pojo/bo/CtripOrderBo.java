@@ -3,6 +3,7 @@ package com.simpletour.gateway.ctrip.rest.pojo.bo;
 import com.simpletour.domain.order.*;
 import com.simpletour.domain.product.Product;
 import com.simpletour.domain.product.Tourism;
+import com.simpletour.gateway.ctrip.config.SysConfig;
 import com.simpletour.gateway.ctrip.rest.pojo.type.orderType.RequestBodyType;
 import com.simpletour.gateway.ctrip.rest.pojo.type.RequestHeaderType;
 import com.simpletour.gateway.ctrip.util.DateUtil;
@@ -75,13 +76,13 @@ public class CtripOrderBo {
         order.setSource(source);
         //设置orderItem
         OrderItem orderItem = new OrderItem();
-        if ("product".equals(this.requestBodyType.getExtendInfo().getType())) {
+        if (SysConfig.PRODUCT_TYPE.equals(this.requestBodyType.getExtendInfo().getType())) {
             Product product = new Product();
             product.setId(Long.parseLong(this.requestBodyType.getProductId()));
             product.setOnline(true);
             orderItem.setProduct(product);
             orderItem.setType(OrderItem.Type.product);
-        } else if ("tourism".equals(this.requestBodyType.getExtendInfo().getType())) {
+        } else if (SysConfig.TOURISM_TYPE.equals(this.requestBodyType.getExtendInfo().getType())) {
             Tourism tourism = new Tourism();
             tourism.setId(Long.parseLong(this.requestBodyType.getProductId()));
             tourism.setOnline(true);
@@ -90,7 +91,7 @@ public class CtripOrderBo {
         }
         //TODO.....后台的价格和订购数量都是通过查询数据库或者计算得出，这个地方对接时需要注意
         if (!(this.requestBodyType.getPrice() == null || this.requestBodyType.getPrice().isEmpty())) {
-            orderItem.setPrice(BigDecimal.valueOf(Long.parseLong(this.requestBodyType.getPrice())));
+            orderItem.setSourcePrice(BigDecimal.valueOf(Long.parseLong(this.requestBodyType.getPrice())));
         }
         orderItem.setQuantity(this.requestBodyType.getCount());
         try {
