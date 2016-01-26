@@ -70,6 +70,8 @@ public class CtripOrderBo {
         order.setName(this.requestBodyType.getContactName());
         order.setMobile(this.requestBodyType.getContactMobile());
         order.setSub(false);
+        //TODO......订单的tenant_id
+//        order.setTenantId(0L);
         //设置source
         Source source = new Source();
         source.setId(Long.parseLong(this.requestHeaderType.getAccountId()));

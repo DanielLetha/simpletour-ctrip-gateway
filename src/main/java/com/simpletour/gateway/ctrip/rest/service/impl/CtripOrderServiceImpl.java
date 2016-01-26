@@ -25,6 +25,7 @@ import com.simpletour.service.user.UserService;
 import com.simpletour.sms.core.SMSTemplateEnum;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -87,6 +88,7 @@ public class CtripOrderServiceImpl implements CtripOrderService {
     }
 
     @Override
+    @Transactional
     public VerifyOrderResponse createOrder(VerifyOrderRequest verifyOrderRequest) {
 
         //获取转化为实体后的数据,并对数据进行组装
@@ -103,12 +105,16 @@ public class CtripOrderServiceImpl implements CtripOrderService {
                 return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.ORDER_HAS_BEEN_USED), new ResponseBodyType(0));
         }
         //验证传进来的用户是否存在,如果有用户则通过,没有则创建用户
-        if (userService.getAvailableUserByMobile(order.getMobile()) == null) {
+        User userOrginal = userService.getAvailableUserByMobile(order.getMobile());
+        if (userOrginal == null) {
             try {
-                userService.addUser(new User(order.getMobile(), order.getMobile(), order.getMobile(), order.getMobile().trim().substring(order.getMobile().length() - 6), "web-xiecheng", User.Status.ACTIVE));
+                User user = userService.addUser(new User(order.getMobile(), order.getMobile(), order.getMobile(), order.getMobile().trim().substring(order.getMobile().length() - 6), "web-xiecheng", User.Status.ACTIVE));
+                order.setUserId(user.getId());
             } catch (Exception e) {
                 return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.VALIDATE_FAILED), new ResponseBodyType(0));
             }
+        } else {
+            order.setUserId(userOrginal.getId());
         }
 
         //验证库存

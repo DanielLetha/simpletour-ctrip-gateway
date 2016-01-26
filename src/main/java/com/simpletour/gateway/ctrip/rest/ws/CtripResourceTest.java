@@ -56,7 +56,7 @@ public class CtripResourceTest extends BaseRESTfulService {
         bodyType.setCount(2);
         bodyType.setContactName("偏分偏出三分");
         bodyType.setContactMobile("130111111111");
-        bodyType.setUseDate("2016-01-16");
+        bodyType.setUseDate("2016-01-26");
 
         List<PassengerInfo> passengerInfos = new ArrayList<>();
         PassengerInfo passengerInfo = new PassengerInfo();
