@@ -1,7 +1,5 @@
 package com.simpletour.gateway.ctrip.rest.service.impl;
 
-import com.simpletour.common.security.token.EncryptedToken;
-import com.simpletour.common.security.token.Token;
 import com.simpletour.common.utils.MD5;
 import com.simpletour.gateway.ctrip.config.SysConfig;
 import com.simpletour.gateway.ctrip.error.CtripOrderError;
