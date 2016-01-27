@@ -1,5 +1,7 @@
 package com.simpletour.gateway.ctrip.rest.service.impl;
 
+import com.simpletour.common.security.token.EncryptedToken;
+import com.simpletour.common.security.token.Token;
 import com.simpletour.common.utils.MD5;
 import com.simpletour.gateway.ctrip.config.SysConfig;
 import com.simpletour.gateway.ctrip.error.CtripOrderError;
@@ -98,6 +100,10 @@ public class CtripValidatorImpl implements CtripValidator {
         if (!requestHeaderType.getSign().equals(MD5.getMD5String(signTo.toString().getBytes()))) {
             return new VerifyResponse(new ResponseHeaderType(CtripOrderError.SIGN_ERROR));
         }
+
+        //统一设置tenant_id
+        //TODO.....设置需要修改
+        new EncryptedToken("1", "1", "1", "1", Token.ClientType.BROWSER);
 
         switch (requestHeaderType.getServiceName()) {
             case SysConfig.VERIFY_ORDER_METHOD:

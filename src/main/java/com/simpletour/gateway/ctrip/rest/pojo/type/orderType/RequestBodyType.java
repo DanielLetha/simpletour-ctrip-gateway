@@ -2,7 +2,7 @@ package com.simpletour.gateway.ctrip.rest.pojo.type.orderType;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.*;
 import java.util.List;
 
 
@@ -108,6 +108,8 @@ public class RequestBodyType {
         this.contactEmail = contactEmail;
     }
 
+    @XmlElementWrapper(name = "passengerInfos")
+    @XmlElement(name = "passengerInfo")
     public List<PassengerInfo> getPassengerInfos() {
         return passengerInfos;
     }

@@ -21,7 +21,7 @@ public class SysConfig {
 
     public static final String QUERY_TOURISM_METHOD = "queryTourism";
 
-    public static final String SIGN_KEY = "signKey";
+    public static final String SIGN_KEY = "9C1012E99067AA970A972103B2CD3D0C";
 
     public static final String PRODUCT_TYPE = "product";
 

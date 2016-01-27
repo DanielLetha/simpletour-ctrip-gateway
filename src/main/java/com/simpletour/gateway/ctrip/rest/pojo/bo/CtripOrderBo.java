@@ -71,7 +71,7 @@ public class CtripOrderBo {
         order.setMobile(this.requestBodyType.getContactMobile());
         order.setSub(false);
         //TODO......订单的tenant_id
-//        order.setTenantId(0L);
+        order.setTenantId(0L);
         //设置source
         Source source = new Source();
         source.setId(Long.parseLong(this.requestHeaderType.getAccountId()));
@@ -95,7 +95,7 @@ public class CtripOrderBo {
         if (!(this.requestBodyType.getPrice() == null || this.requestBodyType.getPrice().isEmpty())) {
 //            orderItem.setSourcePrice(BigDecimal.valueOf(Long.parseLong(this.requestBodyType.getPrice())));
         }
-//        orderItem.setQuantity(this.requestBodyType.getCount());
+        orderItem.setQuantity(this.requestBodyType.getCount());
         try {
             orderItem.setDate(DateUtil.convertStrToDate(this.requestBodyType.getUseDate(), "yyyy-MM-dd"));
         } catch (ParseException e) {
