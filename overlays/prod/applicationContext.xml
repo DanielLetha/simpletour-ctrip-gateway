@@ -16,7 +16,7 @@
     <context:annotation-config/>
 
     <context:component-scan base-package="com.simpletour"/>
-    <context:property-placeholder location="classpath:redis.properties"/>
+    <context:property-placeholder location="classpath:redis.properties,classpath:signkey.properties"/>
 
     <jee:jndi-lookup id="dataSource" jndi-name="java:comp/env/jdbc/simpletour"/>
 

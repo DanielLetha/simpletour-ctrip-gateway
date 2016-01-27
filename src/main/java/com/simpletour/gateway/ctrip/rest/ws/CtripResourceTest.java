@@ -15,6 +15,7 @@ import com.simpletour.gateway.ctrip.rest.pojo.type.transType.RequestBodyTypeForT
 import com.simpletour.gateway.ctrip.rest.service.CtripOrderService;
 import com.simpletour.gateway.ctrip.rest.service.CtripValidator;
 import com.simpletour.gateway.ctrip.util.XMLParseUtil;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import sun.misc.BASE64Encoder;
 
@@ -38,6 +39,9 @@ public class CtripResourceTest extends BaseRESTfulService {
 
     @Resource
     private CtripValidator ctripValidator;
+
+    @Value("${xiecheng.signkey}")
+    private String signKey;
 
     /**
      * 针对验证订单和下单接口构造数据
@@ -92,7 +96,7 @@ public class CtripResourceTest extends BaseRESTfulService {
         buffer.append(headerType.getRequestTime());
         buffer.append(xmlBase64);
         buffer.append(headerType.getVersion());
-        buffer.append(SysConfig.SIGN_KEY);
+        buffer.append(signKey);
         String sign = MD5.getMD5String(buffer.toString().getBytes());
         headerType.setSign(sign);
 
@@ -128,7 +132,7 @@ public class CtripResourceTest extends BaseRESTfulService {
         buffer.append(headerType.getRequestTime());
         buffer.append(xmlBase64);
         buffer.append(headerType.getVersion());
-        buffer.append(SysConfig.SIGN_KEY);
+        buffer.append(signKey);
         String sign = MD5.getMD5String(buffer.toString().getBytes());
         headerType.setSign(sign);
 
@@ -164,7 +168,7 @@ public class CtripResourceTest extends BaseRESTfulService {
         buffer.append(headerType.getRequestTime());
         buffer.append(xmlBase64);
         buffer.append(headerType.getVersion());
-        buffer.append(SysConfig.SIGN_KEY);
+        buffer.append(signKey);
         String sign = MD5.getMD5String(buffer.toString().getBytes());
         headerType.setSign(sign);
 
@@ -205,7 +209,7 @@ public class CtripResourceTest extends BaseRESTfulService {
         buffer.append(headerType.getRequestTime());
         buffer.append(xmlBase64);
         buffer.append(headerType.getVersion());
-        buffer.append(SysConfig.SIGN_KEY);
+        buffer.append(signKey);
         String sign = MD5.getMD5String(buffer.toString().getBytes());
         headerType.setSign(sign);
 

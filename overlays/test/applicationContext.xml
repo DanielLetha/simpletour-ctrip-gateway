@@ -17,7 +17,7 @@
 
     <context:component-scan base-package="com.simpletour"/>
 
-    <context:property-placeholder location="classpath:db.properties,classpath:redis.properties"/>
+    <context:property-placeholder location="classpath:db.properties,classpath:redis.properties,classpath:signkey.properties"/>
 
     <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
           destroy-method="close" scope="singleton">
