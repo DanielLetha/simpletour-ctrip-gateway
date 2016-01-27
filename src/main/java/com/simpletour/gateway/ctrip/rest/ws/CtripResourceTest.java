@@ -51,7 +51,7 @@ public class CtripResourceTest extends BaseRESTfulService {
         //1.构造body信息
         RequestBodyType bodyType = new RequestBodyType();
         ExtendInfoType extendInfoType = new ExtendInfoType();
-        extendInfoType.setType("product");
+        extendInfoType.setProductType("product");
         bodyType.setExtendInfo(extendInfoType);
         bodyType.setProductId("1");
         bodyType.setPrice("100");

@@ -70,21 +70,21 @@ public class CtripOrderBo {
         order.setName(this.requestBodyType.getContactName());
         order.setMobile(this.requestBodyType.getContactMobile());
         order.setSub(false);
-        //TODO......订单的tenant_id
-        order.setTenantId(0L);
+        //来自携程的订单设置为tenantId=1L
+        order.setTenantId(1L);
         //设置source
         Source source = new Source();
         source.setId(Long.parseLong(this.requestHeaderType.getAccountId()));
         order.setSource(source);
         //设置orderItem
         OrderItem orderItem = new OrderItem();
-        if (SysConfig.PRODUCT_TYPE.equals(this.requestBodyType.getExtendInfo().getType())) {
+        if (SysConfig.PRODUCT_TYPE.equals(this.requestBodyType.getExtendInfo().getProductType())) {
             Product product = new Product();
             product.setId(Long.parseLong(this.requestBodyType.getProductId()));
             product.setOnline(true);
             orderItem.setProduct(product);
             orderItem.setType(OrderItem.Type.product);
-        } else if (SysConfig.TOURISM_TYPE.equals(this.requestBodyType.getExtendInfo().getType())) {
+        } else if (SysConfig.TOURISM_TYPE.equals(this.requestBodyType.getExtendInfo().getProductType())) {
             Tourism tourism = new Tourism();
             tourism.setId(Long.parseLong(this.requestBodyType.getProductId()));
             tourism.setOnline(true);
@@ -93,7 +93,7 @@ public class CtripOrderBo {
         }
         //TODO.....后台的价格和订购数量都是通过查询数据库或者计算得出，这个地方对接时需要注意
         if (!(this.requestBodyType.getPrice() == null || this.requestBodyType.getPrice().isEmpty())) {
-//            orderItem.setSourcePrice(BigDecimal.valueOf(Long.parseLong(this.requestBodyType.getPrice())));
+            orderItem.setSourcePrice(BigDecimal.valueOf(Long.parseLong(this.requestBodyType.getPrice())));
         }
         orderItem.setQuantity(this.requestBodyType.getCount());
         try {
