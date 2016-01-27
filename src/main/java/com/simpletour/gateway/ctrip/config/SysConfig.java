@@ -5,7 +5,7 @@ package com.simpletour.gateway.ctrip.config;
  */
 public class SysConfig {
 
-    public static final String ORDER_HANDLER = "orderHandler";
+    public static final String ORDER_HANDLER = "orderhandler";
 
     public static final String TOURISM_HANDLER = "tourismHandler";
 
