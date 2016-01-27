@@ -105,10 +105,6 @@ public class CtripValidatorImpl implements CtripValidator {
             return new VerifyResponse(new ResponseHeaderType(CtripOrderError.SIGN_ERROR));
         }
 
-        //统一设置tenant_id
-        //TODO.....设置需要修改
-        new EncryptedToken("1", "1", "1", "1", Token.ClientType.BROWSER);
-
         switch (requestHeaderType.getServiceName()) {
             case SysConfig.VERIFY_ORDER_METHOD:
                 return ctripOrderService.verifyOrder(verifyOrderRequest);
