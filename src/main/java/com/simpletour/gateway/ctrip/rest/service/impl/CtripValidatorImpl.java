@@ -17,6 +17,7 @@ import com.simpletour.gateway.ctrip.rest.service.CtripOrderService;
 import com.simpletour.gateway.ctrip.rest.service.CtripTransService;
 import com.simpletour.gateway.ctrip.rest.service.CtripValidator;
 import com.simpletour.gateway.ctrip.util.XMLParseUtil;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import sun.misc.BASE64Encoder;
 
@@ -33,6 +34,9 @@ public class CtripValidatorImpl implements CtripValidator {
 
     @Resource
     private CtripOrderService ctripOrderService;
+
+    @Value("${xiecheng.signkey}")
+    private String signKey;
 
     /**
      * 校验请求
@@ -95,7 +99,7 @@ public class CtripValidatorImpl implements CtripValidator {
         signTo.append(requestHeaderType.getRequestTime());
         signTo.append(new BASE64Encoder().encode(bodyString.getBytes()));
         signTo.append(requestHeaderType.getVersion());
-        signTo.append(SysConfig.SIGN_KEY);
+        signTo.append(signKey);
         //验证签名
         if (!requestHeaderType.getSign().equals(MD5.getMD5String(signTo.toString().getBytes()))) {
             return new VerifyResponse(new ResponseHeaderType(CtripOrderError.SIGN_ERROR));
