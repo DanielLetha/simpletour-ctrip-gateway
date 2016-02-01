@@ -93,7 +93,7 @@ public class CtripOrderBo {
         }
         //TODO.....后台的价格和订购数量都是通过查询数据库或者计算得出，这个地方对接时需要注意
         if (!(this.requestBodyType.getPrice() == null || this.requestBodyType.getPrice().isEmpty())) {
-            orderItem.setSourcePrice(BigDecimal.valueOf(Long.parseLong(this.requestBodyType.getPrice())));
+            orderItem.setSourcePrice(BigDecimal.valueOf(Double.parseDouble(this.requestBodyType.getPrice())));
         }
         orderItem.setQuantity(this.requestBodyType.getCount());
         try {

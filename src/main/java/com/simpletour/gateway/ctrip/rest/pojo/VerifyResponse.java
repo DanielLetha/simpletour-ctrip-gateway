@@ -2,9 +2,12 @@ package com.simpletour.gateway.ctrip.rest.pojo;
 
 import com.simpletour.gateway.ctrip.rest.pojo.type.ResponseHeaderType;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
  * Created by Mario on 2016/1/15.
  */
+@XmlRootElement(name = "response")
 public class VerifyResponse {
 
     /**
@@ -18,7 +21,8 @@ public class VerifyResponse {
     VerifyResponse() {
     }
 
-    public VerifyResponse(ResponseHeaderType responseHeaderType) {
+    public VerifyResponse(ResponseHeaderType header) {
+        this.header = header;
     }
 
     public ResponseHeaderType getHeader() {

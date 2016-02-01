@@ -46,7 +46,7 @@ public class CtripResourceTest extends BaseRESTfulService {
      *
      * @return
      */
-    private String buildString(String serviceName) {
+    private VerifyOrderRequest buildString(String serviceName) {
         //构造数据
         //1.构造body信息
         RequestBodyType bodyType = new RequestBodyType();
@@ -58,7 +58,7 @@ public class CtripResourceTest extends BaseRESTfulService {
         bodyType.setCount(2);
         bodyType.setContactName("偏分偏出三分");
         bodyType.setContactMobile("130111111111");
-        bodyType.setUseDate("2016-01-26");
+        bodyType.setUseDate("2016-01-28");
 
         List<PassengerInfo> passengerInfos = new ArrayList<>();
         PassengerInfo passengerInfo = new PassengerInfo();
@@ -77,7 +77,7 @@ public class CtripResourceTest extends BaseRESTfulService {
         bodyType.setPassengerInfos(passengerInfos);
 
         String xml = XMLParseUtil.convertToXml(bodyType);
-        String xmlBody = XMLParseUtil.subStringForXML(xml);
+        String xmlBody = XMLParseUtil.subStringForXML(xml).trim();
 
         //2.构造header信息
         RequestHeaderType headerType = new RequestHeaderType();
@@ -102,10 +102,12 @@ public class CtripResourceTest extends BaseRESTfulService {
         VerifyOrderRequest request = new VerifyOrderRequest();
         request.setHeader(headerType);
         request.setBody(bodyType);
-        return XMLParseUtil.convertToXml(request);
+
+        String xmlParse = XMLParseUtil.convertToXml(request);
+        return request;
     }
 
-    private String buildStringForCancelOrder(String serviceName) {
+    private VerifyOrderRequest buildStringForCancelOrder(String serviceName) {
         //构造数据
         //1.构造body信息
         RequestBodyType bodyType = new RequestBodyType();
@@ -138,10 +140,12 @@ public class CtripResourceTest extends BaseRESTfulService {
         VerifyOrderRequest request = new VerifyOrderRequest();
         request.setHeader(headerType);
         request.setBody(bodyType);
-        return XMLParseUtil.convertToXml(request);
+
+        String xmlParse = XMLParseUtil.convertToXml(request);
+        return request;
     }
 
-    private String buildStringForQueryOrder(String serviceName) {
+    private VerifyOrderRequest buildStringForQueryOrder(String serviceName) {
         //构造数据
         //1.构造body信息
         RequestBodyType bodyType = new RequestBodyType();
@@ -159,7 +163,7 @@ public class CtripResourceTest extends BaseRESTfulService {
         headerType.setVersion("2.0");
 
         //3.编码sign
-        String xmlBase64 = new BASE64Encoder().encode(xmlBody.getBytes());
+        String xmlBase64 = new BASE64Encoder().encode(xmlBody.getBytes()).trim();
         StringBuffer buffer = new StringBuffer();
         buffer.append(headerType.getAccountId());
         buffer.append(headerType.getServiceName());
@@ -174,7 +178,9 @@ public class CtripResourceTest extends BaseRESTfulService {
         VerifyOrderRequest request = new VerifyOrderRequest();
         request.setHeader(headerType);
         request.setBody(bodyType);
-        return XMLParseUtil.convertToXml(request);
+
+        String xmlParse = XMLParseUtil.convertToXml(request);
+        return request;
     }
 
     /**
@@ -182,7 +188,7 @@ public class CtripResourceTest extends BaseRESTfulService {
      *
      * @return
      */
-    private String buildStringForTourism(String serviceName) {
+    private VerifyTransRequest buildStringForTourism(String serviceName) {
         //构造数据
         //1.构造body信息
         RequestBodyTypeForTrans bodyType = new RequestBodyTypeForTrans();
@@ -215,7 +221,9 @@ public class CtripResourceTest extends BaseRESTfulService {
         VerifyTransRequest request = new VerifyTransRequest();
         request.setHeader(headerType);
         request.setBody(bodyType);
-        return XMLParseUtil.convertToXml(request);
+
+        String xmlParse = XMLParseUtil.convertToXml(request);
+        return request;
     }
 
     /**

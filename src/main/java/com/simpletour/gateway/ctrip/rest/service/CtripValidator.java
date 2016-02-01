@@ -1,5 +1,6 @@
 package com.simpletour.gateway.ctrip.rest.service;
 
+import com.simpletour.gateway.ctrip.rest.pojo.VerifyRequest;
 import com.simpletour.gateway.ctrip.rest.pojo.VerifyResponse;
 
 /**
@@ -13,5 +14,5 @@ public interface CtripValidator {
      * @param methodName 方法名
      * @return
      */
-    VerifyResponse validatePre(String request, String methodName);
+    VerifyResponse validatePre(VerifyRequest request, String methodName);
 }

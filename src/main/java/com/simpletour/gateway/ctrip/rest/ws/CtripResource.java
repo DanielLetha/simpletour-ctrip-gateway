@@ -2,7 +2,9 @@ package com.simpletour.gateway.ctrip.rest.ws;
 
 import com.simpletour.common.restful.service.BaseRESTfulService;
 import com.simpletour.gateway.ctrip.config.SysConfig;
+import com.simpletour.gateway.ctrip.rest.pojo.VerifyOrderRequest;
 import com.simpletour.gateway.ctrip.rest.pojo.VerifyResponse;
+import com.simpletour.gateway.ctrip.rest.pojo.VerifyTransRequest;
 import com.simpletour.gateway.ctrip.rest.service.CtripValidator;
 import org.springframework.stereotype.Component;
 
@@ -33,7 +35,7 @@ public class CtripResource extends BaseRESTfulService {
      */
     @POST
     @Path(SysConfig.ORDER_HANDLER)
-    public VerifyResponse orderHandler(String request) {
+    public VerifyResponse orderHandler(VerifyOrderRequest request) {
         return ctripValidator.validatePre(request, SysConfig.ORDER_HANDLER);
     }
 
@@ -45,8 +47,7 @@ public class CtripResource extends BaseRESTfulService {
      */
     @POST
     @Path(SysConfig.TOURISM_HANDLER)
-    public VerifyResponse tourismHandler(String request) {
+    public VerifyResponse tourismHandler(VerifyTransRequest request) {
         return ctripValidator.validatePre(request, SysConfig.TOURISM_HANDLER);
     }
-
 }

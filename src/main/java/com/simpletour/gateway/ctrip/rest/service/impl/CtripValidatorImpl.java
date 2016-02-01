@@ -3,10 +3,7 @@ package com.simpletour.gateway.ctrip.rest.service.impl;
 import com.simpletour.common.utils.MD5;
 import com.simpletour.gateway.ctrip.config.SysConfig;
 import com.simpletour.gateway.ctrip.error.CtripOrderError;
-import com.simpletour.gateway.ctrip.rest.pojo.VerifyOrderRequest;
-import com.simpletour.gateway.ctrip.rest.pojo.VerifyResponse;
-import com.simpletour.gateway.ctrip.rest.pojo.VerifyTransRequest;
-import com.simpletour.gateway.ctrip.rest.pojo.VerifyTransResponse;
+import com.simpletour.gateway.ctrip.rest.pojo.*;
 import com.simpletour.gateway.ctrip.rest.pojo.type.RequestHeaderType;
 import com.simpletour.gateway.ctrip.rest.pojo.type.ResponseHeaderType;
 import com.simpletour.gateway.ctrip.rest.pojo.type.orderType.RequestBodyType;
@@ -42,12 +39,14 @@ public class CtripValidatorImpl implements CtripValidator {
      * @param request
      * @return
      */
-    public VerifyResponse validatePre(String request, String methodName) {
-        if (request == null || request.isEmpty()) {
+    public VerifyResponse validatePre(VerifyRequest request, String methodName) {
+        if (request == null ) {
             return new VerifyResponse(new ResponseHeaderType(CtripOrderError.JSON_RESOLVE_FAILED));
         }
+
+        String requestXml = XMLParseUtil.convertToXml(request);
         //去掉xml头信息
-        String xmlString = XMLParseUtil.subStringForXML(request);
+        String xmlString = XMLParseUtil.subStringForXML(requestXml);
         if (xmlString == null || xmlString.isEmpty()) {
             return new VerifyResponse(new ResponseHeaderType(CtripOrderError.JSON_RESOLVE_FAILED));
         }
@@ -88,7 +87,7 @@ public class CtripValidatorImpl implements CtripValidator {
             return new VerifyResponse(new ResponseHeaderType(CtripOrderError.JSON_RESOLVE_FAILED));
         }
         //将body的xml去头信息
-        String bodyString = XMLParseUtil.subStringForXML(xmlBodyNode);
+        String bodyString = XMLParseUtil.subStringForXML(xmlBodyNode).trim();
 
         //取文件头转为requestHeaderType实体类
         RequestHeaderType requestHeaderType = SysConfig.ORDER_HANDLER.equals(methodName) ? verifyOrderRequest.getHeader() : (SysConfig.TOURISM_HANDLER.equals(methodName) ? verifyTransRequest.getHeader() : null);
