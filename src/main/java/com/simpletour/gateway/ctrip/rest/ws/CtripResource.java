@@ -3,10 +3,6 @@ package com.simpletour.gateway.ctrip.rest.ws;
 import com.simpletour.common.restful.service.BaseRESTfulService;
 import com.simpletour.gateway.ctrip.config.SysConfig;
 import com.simpletour.gateway.ctrip.rest.pojo.VerifyResponse;
-import com.simpletour.gateway.ctrip.rest.pojo.VerifyTransResponse;
-import com.simpletour.gateway.ctrip.rest.pojo.VerifyOrderResponse;
-import com.simpletour.gateway.ctrip.rest.service.CtripOrderService;
-import com.simpletour.gateway.ctrip.rest.service.CtripTransService;
 import com.simpletour.gateway.ctrip.rest.service.CtripValidator;
 import org.springframework.stereotype.Component;
 
