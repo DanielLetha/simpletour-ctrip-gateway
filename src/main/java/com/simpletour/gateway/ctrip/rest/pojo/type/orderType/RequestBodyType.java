@@ -3,6 +3,7 @@ package com.simpletour.gateway.ctrip.rest.pojo.type.orderType;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import javax.xml.bind.annotation.*;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -109,7 +110,7 @@ public class RequestBodyType {
     }
 
     @XmlElementWrapper(name = "passengerInfos")
-    @XmlElement(name = "passengerInfo")
+    @XmlElement(name = "passengerInfo",required = true)
     public List<PassengerInfo> getPassengerInfos() {
         return passengerInfos;
     }
@@ -135,9 +136,6 @@ public class RequestBodyType {
     }
 
     public ExtendInfoType getExtendInfo() {
-        if(this.extendInfo == null){
-            this.extendInfo = new ExtendInfoType();
-        }
         return extendInfo;
     }
 

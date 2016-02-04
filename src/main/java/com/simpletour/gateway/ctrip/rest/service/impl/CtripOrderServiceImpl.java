@@ -1,6 +1,7 @@
 package com.simpletour.gateway.ctrip.rest.service.impl;
 
 import com.simpletour.biz.inventory.IStockBiz;
+import com.simpletour.biz.order.IOrderBiz;
 import com.simpletour.biz.order.impl.OrderBizImpl;
 import com.simpletour.common.core.dao.IBaseDao;
 import com.simpletour.common.core.dao.query.condition.AndConditionSet;
@@ -39,7 +40,7 @@ import java.util.Optional;
 public class CtripOrderServiceImpl implements CtripOrderService {
 
     @Resource
-    private OrderBizImpl orderBiz;
+    private IOrderBiz orderBiz;
 
     @Resource
     private IOrderService orderService;
