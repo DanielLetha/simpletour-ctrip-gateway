@@ -44,21 +44,14 @@ public class CtripValidatorImpl implements CtripValidator {
             return new VerifyResponse(new ResponseHeaderType(CtripOrderError.JSON_RESOLVE_FAILED));
         }
 
-        String requestXml = XMLParseUtil.convertToXml(request);
-        //去掉xml头信息
-        String xmlString = XMLParseUtil.subStringForXML(requestXml);
-        if (xmlString == null || xmlString.isEmpty()) {
-            return new VerifyResponse(new ResponseHeaderType(CtripOrderError.JSON_RESOLVE_FAILED));
-        }
-
         //将去头的xml转换成可以处理的实体类
         VerifyOrderRequest verifyOrderRequest = null;
         VerifyTransRequest verifyTransRequest = null;
         try {
             if (SysConfig.TOURISM_HANDLER.equals(methodName)) {
-                verifyTransRequest = XMLParseUtil.convertToJavaBean(xmlString, VerifyTransRequest.class);
+                verifyTransRequest = (VerifyTransRequest) request;
             } else if (SysConfig.ORDER_HANDLER.equals(methodName)) {
-                verifyOrderRequest = XMLParseUtil.convertToJavaBean(xmlString, VerifyOrderRequest.class);
+                verifyOrderRequest = (VerifyOrderRequest) request;
             } else {
                 return new VerifyResponse(new ResponseHeaderType(CtripOrderError.JSON_RESOLVE_FAILED));
             }
