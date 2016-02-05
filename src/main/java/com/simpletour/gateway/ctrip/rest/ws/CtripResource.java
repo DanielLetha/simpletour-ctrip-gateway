@@ -35,7 +35,7 @@ public class CtripResource extends BaseRESTfulService {
      */
     @POST
     @Path(SysConfig.ORDER_HANDLER)
-    public VerifyResponse orderHandler(VerifyOrderRequest request) {
+    public VerifyResponse orderHandler(String request) {
         return ctripValidator.validatePre(request, SysConfig.ORDER_HANDLER);
     }
 
@@ -47,7 +47,7 @@ public class CtripResource extends BaseRESTfulService {
      */
     @POST
     @Path(SysConfig.TOURISM_HANDLER)
-    public VerifyResponse tourismHandler(VerifyTransRequest request) {
+    public VerifyResponse tourismHandler(String request) {
         return ctripValidator.validatePre(request, SysConfig.TOURISM_HANDLER);
     }
 }

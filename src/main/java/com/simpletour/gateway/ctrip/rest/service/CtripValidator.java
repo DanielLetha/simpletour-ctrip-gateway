@@ -14,5 +14,5 @@ public interface CtripValidator {
      * @param methodName 方法名
      * @return
      */
-    VerifyResponse validatePre(VerifyRequest request, String methodName);
+    VerifyResponse validatePre(String request, String methodName);
 }

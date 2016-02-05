@@ -46,7 +46,7 @@ public class CtripResourceTest extends BaseRESTfulService {
      *
      * @return
      */
-    private VerifyOrderRequest buildString(String serviceName) {
+    private String buildString(String serviceName) {
         //构造数据
         //1.构造body信息
         RequestBodyType bodyType = new RequestBodyType();
@@ -103,11 +103,10 @@ public class CtripResourceTest extends BaseRESTfulService {
         request.setHeader(headerType);
         request.setBody(bodyType);
 
-        String xmlParse = XMLParseUtil.convertToXml(request);
-        return request;
+        return XMLParseUtil.convertToXml(request);
     }
 
-    private VerifyOrderRequest buildStringForCancelOrder(String serviceName) {
+    private String buildStringForCancelOrder(String serviceName) {
         //构造数据
         //1.构造body信息
         RequestBodyType bodyType = new RequestBodyType();
@@ -141,11 +140,10 @@ public class CtripResourceTest extends BaseRESTfulService {
         request.setHeader(headerType);
         request.setBody(bodyType);
 
-        String xmlParse = XMLParseUtil.convertToXml(request);
-        return request;
+        return XMLParseUtil.convertToXml(request);
     }
 
-    private VerifyOrderRequest buildStringForQueryOrder(String serviceName) {
+    private String buildStringForQueryOrder(String serviceName) {
         //构造数据
         //1.构造body信息
         RequestBodyType bodyType = new RequestBodyType();
@@ -179,8 +177,7 @@ public class CtripResourceTest extends BaseRESTfulService {
         request.setHeader(headerType);
         request.setBody(bodyType);
 
-        String xmlParse = XMLParseUtil.convertToXml(request);
-        return request;
+        return XMLParseUtil.convertToXml(request);
     }
 
     /**
@@ -188,7 +185,7 @@ public class CtripResourceTest extends BaseRESTfulService {
      *
      * @return
      */
-    private VerifyTransRequest buildStringForTourism(String serviceName) {
+    private String buildStringForTourism(String serviceName) {
         //构造数据
         //1.构造body信息
         RequestBodyTypeForTrans bodyType = new RequestBodyTypeForTrans();
@@ -222,8 +219,7 @@ public class CtripResourceTest extends BaseRESTfulService {
         request.setHeader(headerType);
         request.setBody(bodyType);
 
-        String xmlParse = XMLParseUtil.convertToXml(request);
-        return request;
+        return XMLParseUtil.convertToXml(request);
     }
 
     /**

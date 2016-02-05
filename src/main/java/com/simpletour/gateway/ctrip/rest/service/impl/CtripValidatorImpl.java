@@ -39,8 +39,8 @@ public class CtripValidatorImpl implements CtripValidator {
      * @param request
      * @return
      */
-    public VerifyResponse validatePre(VerifyRequest request, String methodName) {
-        if (request == null ) {
+    public VerifyResponse validatePre(String request, String methodName) {
+        if (request == null || request.isEmpty()) {
             return new VerifyResponse(new ResponseHeaderType(CtripOrderError.JSON_RESOLVE_FAILED));
         }
 
@@ -49,49 +49,29 @@ public class CtripValidatorImpl implements CtripValidator {
         VerifyTransRequest verifyTransRequest = null;
         try {
             if (SysConfig.TOURISM_HANDLER.equals(methodName)) {
-                verifyTransRequest = (VerifyTransRequest) request;
+                verifyTransRequest = XMLParseUtil.convertToJavaBean(request, VerifyTransRequest.class);
             } else if (SysConfig.ORDER_HANDLER.equals(methodName)) {
-                verifyOrderRequest = (VerifyOrderRequest) request;
+                verifyOrderRequest = XMLParseUtil.convertToJavaBean(request, VerifyOrderRequest.class);
             } else {
                 return new VerifyResponse(new ResponseHeaderType(CtripOrderError.JSON_RESOLVE_FAILED));
             }
         } catch (Exception e) {
             return new VerifyResponse(new ResponseHeaderType(CtripOrderError.XML_RESOLVE_FAILED));
         }
-        //将body编码为sign
-        RequestBodyType requestBodyType = null;
-        RequestBodyTypeForTrans requestBodyTypeForTrans = null;
-        if (SysConfig.ORDER_HANDLER.equals(methodName)) {
-            requestBodyType = verifyOrderRequest.getBody();
-            if (requestBodyType == null) {
-                return new VerifyTransResponse(new ResponseHeaderType(CtripOrderError.JSON_RESOLVE_FAILED), null);
-            }
-        } else if (SysConfig.TOURISM_HANDLER.equals(methodName)) {
-            requestBodyTypeForTrans = verifyTransRequest.getBody();
-            if (requestBodyTypeForTrans == null) {
-                return new VerifyTransResponse(new ResponseHeaderType(CtripOrderError.JSON_RESOLVE_FAILED), null);
-            }
-        }
 
-        String xmlBodyNode;
-        try {
-            xmlBodyNode = XMLParseUtil.convertToXml(SysConfig.ORDER_HANDLER.equals(methodName) ? requestBodyType : (SysConfig.TOURISM_HANDLER.equals(methodName) ? requestBodyTypeForTrans : null));
-        } catch (Exception e) {
-            return new VerifyResponse(new ResponseHeaderType(CtripOrderError.JSON_RESOLVE_FAILED));
-        }
-        //将body的xml去头信息
-        String bodyString = XMLParseUtil.subStringForXML(xmlBodyNode).trim();
+        //过滤出body信息
+        String bodyString = XMLParseUtil.subBodyStringForXml(request).trim();
 
         //取文件头转为requestHeaderType实体类
         RequestHeaderType requestHeaderType = SysConfig.ORDER_HANDLER.equals(methodName) ? verifyOrderRequest.getHeader() : (SysConfig.TOURISM_HANDLER.equals(methodName) ? verifyTransRequest.getHeader() : null);
         StringBuffer signTo = new StringBuffer(requestHeaderType.getAccountId());
         signTo.append(requestHeaderType.getServiceName());
         signTo.append(requestHeaderType.getRequestTime());
-        signTo.append(new BASE64Encoder().encode(bodyString.getBytes()));
+        signTo.append(new BASE64Encoder().encode(bodyString.getBytes()).replace("\r\n",""));
         signTo.append(requestHeaderType.getVersion());
         signTo.append(signKey);
         //验证签名
-        if (!requestHeaderType.getSign().equals(MD5.getMD5String(signTo.toString().getBytes()))) {
+        if (!requestHeaderType.getSign().equals(MD5.getMD5String(signTo.toString().getBytes()).toLowerCase())) {
             return new VerifyResponse(new ResponseHeaderType(CtripOrderError.SIGN_ERROR));
         }
 
