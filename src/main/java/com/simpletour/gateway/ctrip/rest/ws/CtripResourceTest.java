@@ -53,41 +53,47 @@ public class CtripResourceTest extends BaseRESTfulService {
         ExtendInfoType extendInfoType = new ExtendInfoType();
         extendInfoType.setProductType("0");
         bodyType.setExtendInfo(extendInfoType);
-        bodyType.setProductId("1");
-        bodyType.setPrice("100");
+        bodyType.setProductId("470");
+        bodyType.setPrice("130");
         bodyType.setCount(2);
         bodyType.setContactName("偏分偏出三分");
         bodyType.setContactMobile("130111111111");
-        bodyType.setUseDate("2016-01-28");
+        bodyType.setUseDate("2016-02-15");
 
         List<PassengerInfo> passengerInfos = new ArrayList<>();
         PassengerInfo passengerInfo = new PassengerInfo();
-        passengerInfo.setName("大毛");
-        passengerInfo.setMobile("010101010101010");
+        passengerInfo.setName("马大叔");
+        passengerInfo.setMobile("909090909090");
         passengerInfo.setCardType("1");
         passengerInfo.setCardNo("511102199107200011");
         passengerInfos.add(passengerInfo);
 
         PassengerInfo passengerInfo1 = new PassengerInfo();
-        passengerInfo1.setName("毛线");
+        passengerInfo1.setName("马大叔他大叔");
         passengerInfo1.setMobile("010101010101010");
         passengerInfo1.setCardType("1");
         passengerInfo1.setCardNo("511102199107200011");
         passengerInfos.add(passengerInfo1);
         bodyType.setPassengerInfos(passengerInfos);
 
-        String xml = XMLParseUtil.convertToXml(bodyType);
-        String xmlBody = XMLParseUtil.subStringForXML(xml).trim();
 
         //2.构造header信息
         RequestHeaderType headerType = new RequestHeaderType();
-        headerType.setAccountId("1");
+        headerType.setAccountId("71");
         headerType.setServiceName(serviceName);
-        headerType.setRequestTime("2015-10-19 16:05:31");
+        headerType.setRequestTime("2016-2-15 11:16:31");
         headerType.setVersion("2.0");
 
+        //组装最后的数据
+        VerifyOrderRequest request = new VerifyOrderRequest();
+        request.setHeader(headerType);
+        request.setBody(bodyType);
+
+        String xml = XMLParseUtil.convertToXml(request);
+        String xmlBodyString = XMLParseUtil.subBodyStringForXml(xml).trim();
+
         //3.编码sign
-        String xmlBase64 = new BASE64Encoder().encode(xmlBody.getBytes());
+        String xmlBase64 = new BASE64Encoder().encode(xmlBodyString.getBytes()).replace("\r\n", "");
         StringBuffer buffer = new StringBuffer();
         buffer.append(headerType.getAccountId());
         buffer.append(headerType.getServiceName());
@@ -95,13 +101,8 @@ public class CtripResourceTest extends BaseRESTfulService {
         buffer.append(xmlBase64);
         buffer.append(headerType.getVersion());
         buffer.append(signKey);
-        String sign = MD5.getMD5String(buffer.toString().getBytes());
+        String sign = MD5.getMD5String(buffer.toString().getBytes()).toLowerCase();
         headerType.setSign(sign);
-
-        //组装最后的数据
-        VerifyOrderRequest request = new VerifyOrderRequest();
-        request.setHeader(headerType);
-        request.setBody(bodyType);
 
         return XMLParseUtil.convertToXml(request);
     }

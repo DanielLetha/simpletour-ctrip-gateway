@@ -11,6 +11,7 @@ import com.simpletour.gateway.ctrip.util.DateUtil;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -69,6 +70,7 @@ public class CtripOrderBo {
         }
         order.setName(this.requestBodyType.getContactName());
         order.setMobile(this.requestBodyType.getContactMobile());
+        order.setReserveTime(new Date(order.getCreatedTime().getTime() + 5 * 60 * 1000));
         order.setSub(false);
         //来自携程的订单设置为tenantId=1L
         order.setTenantId(1L);
