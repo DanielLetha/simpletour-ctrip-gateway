@@ -11,12 +11,14 @@ import com.simpletour.gateway.ctrip.rest.pojo.type.transType.RequestBodyTypeForT
 import com.simpletour.gateway.ctrip.rest.service.CtripOrderService;
 import com.simpletour.gateway.ctrip.rest.service.CtripTransService;
 import com.simpletour.gateway.ctrip.rest.service.CtripValidator;
+import com.simpletour.gateway.ctrip.util.StringUtils;
 import com.simpletour.gateway.ctrip.util.XMLParseUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import sun.misc.BASE64Encoder;
 
 import javax.annotation.Resource;
+import java.io.UnsupportedEncodingException;
 
 /**
  * Created by Mario on 2016/1/3.
@@ -60,14 +62,18 @@ public class CtripValidatorImpl implements CtripValidator {
         }
 
         //过滤出body信息
-        String bodyString = XMLParseUtil.subBodyStringForXml(request).trim();
+        String bodyString = StringUtils.replaceBlank(XMLParseUtil.subBodyStringForXml(request));
 
         //取文件头转为requestHeaderType实体类
         RequestHeaderType requestHeaderType = SysConfig.ORDER_HANDLER.equals(methodName) ? verifyOrderRequest.getHeader() : (SysConfig.TOURISM_HANDLER.equals(methodName) ? verifyTransRequest.getHeader() : null);
         StringBuffer signTo = new StringBuffer(requestHeaderType.getAccountId());
         signTo.append(requestHeaderType.getServiceName());
         signTo.append(requestHeaderType.getRequestTime());
-        signTo.append(new BASE64Encoder().encode(bodyString.getBytes()).replace("\r\n",""));
+        try {
+            signTo.append(org.bouncycastle.util.encoders.Base64.toBase64String(bodyString.getBytes("UTF-8")));
+        } catch (UnsupportedEncodingException e) {
+            return new VerifyResponse(new ResponseHeaderType(CtripOrderError.JSON_RESOLVE_FAILED));
+        }
         signTo.append(requestHeaderType.getVersion());
         signTo.append(signKey);
         //验证签名

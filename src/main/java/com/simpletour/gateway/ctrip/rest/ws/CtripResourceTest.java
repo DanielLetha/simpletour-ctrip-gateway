@@ -12,6 +12,7 @@ import com.simpletour.gateway.ctrip.rest.pojo.type.orderType.PassengerInfo;
 import com.simpletour.gateway.ctrip.rest.pojo.type.orderType.RequestBodyType;
 import com.simpletour.gateway.ctrip.rest.pojo.type.transType.RequestBodyTypeForTrans;
 import com.simpletour.gateway.ctrip.rest.service.CtripValidator;
+import com.simpletour.gateway.ctrip.util.StringUtils;
 import com.simpletour.gateway.ctrip.util.XMLParseUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -23,6 +24,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,7 +48,7 @@ public class CtripResourceTest extends BaseRESTfulService {
      *
      * @return
      */
-    private String buildString(String serviceName) {
+    private String buildString(String serviceName) throws UnsupportedEncodingException {
         //构造数据
         //1.构造body信息
         RequestBodyType bodyType = new RequestBodyType();
@@ -90,10 +92,10 @@ public class CtripResourceTest extends BaseRESTfulService {
         request.setBody(bodyType);
 
         String xml = XMLParseUtil.convertToXml(request);
-        String xmlBodyString = XMLParseUtil.subBodyStringForXml(xml).trim();
+        String xmlBodyString = StringUtils.replaceBlank(XMLParseUtil.subBodyStringForXml(xml));
 
         //3.编码sign
-        String xmlBase64 = new BASE64Encoder().encode(xmlBodyString.getBytes()).replace("\r\n", "");
+        String xmlBase64 = org.bouncycastle.util.encoders.Base64.toBase64String(xmlBodyString.getBytes("UTF-8"));
         StringBuffer buffer = new StringBuffer();
         buffer.append(headerType.getAccountId());
         buffer.append(headerType.getServiceName());
@@ -107,15 +109,12 @@ public class CtripResourceTest extends BaseRESTfulService {
         return XMLParseUtil.convertToXml(request);
     }
 
-    private String buildStringForCancelOrder(String serviceName) {
+    private String buildStringForCancelOrder(String serviceName) throws UnsupportedEncodingException {
         //构造数据
         //1.构造body信息
         RequestBodyType bodyType = new RequestBodyType();
         bodyType.setOtaOrderId("zxqfafjiqlfaqp9");
         bodyType.setVendorOrderId("33681016832");
-
-        String xml = XMLParseUtil.convertToXml(bodyType);
-        String xmlBody = XMLParseUtil.subStringForXML(xml);
 
         //2.构造header信息
         RequestHeaderType headerType = new RequestHeaderType();
@@ -124,8 +123,16 @@ public class CtripResourceTest extends BaseRESTfulService {
         headerType.setRequestTime("2015-10-19 16:05:31");
         headerType.setVersion("2.0");
 
+        //组装最后的数据
+        VerifyOrderRequest request = new VerifyOrderRequest();
+        request.setHeader(headerType);
+        request.setBody(bodyType);
+
+        String xml = XMLParseUtil.convertToXml(request);
+        String xmlBodyString = StringUtils.replaceBlank(XMLParseUtil.subBodyStringForXml(xml));
+
         //3.编码sign
-        String xmlBase64 = new BASE64Encoder().encode(xmlBody.getBytes());
+        String xmlBase64 = org.bouncycastle.util.encoders.Base64.toBase64String(xmlBodyString.getBytes("UTF-8"));
         StringBuffer buffer = new StringBuffer();
         buffer.append(headerType.getAccountId());
         buffer.append(headerType.getServiceName());
@@ -135,24 +142,16 @@ public class CtripResourceTest extends BaseRESTfulService {
         buffer.append(signKey);
         String sign = MD5.getMD5String(buffer.toString().getBytes());
         headerType.setSign(sign);
-
-        //组装最后的数据
-        VerifyOrderRequest request = new VerifyOrderRequest();
-        request.setHeader(headerType);
-        request.setBody(bodyType);
 
         return XMLParseUtil.convertToXml(request);
     }
 
-    private String buildStringForQueryOrder(String serviceName) {
+    private String buildStringForQueryOrder(String serviceName) throws UnsupportedEncodingException {
         //构造数据
         //1.构造body信息
         RequestBodyType bodyType = new RequestBodyType();
         bodyType.setOtaOrderId("zxqfafjiqlfaqp9");
         bodyType.setVendorOrderId("33681016832");
-
-        String xml = XMLParseUtil.convertToXml(bodyType);
-        String xmlBody = XMLParseUtil.subStringForXML(xml);
 
         //2.构造header信息
         RequestHeaderType headerType = new RequestHeaderType();
@@ -161,8 +160,16 @@ public class CtripResourceTest extends BaseRESTfulService {
         headerType.setRequestTime("2015-10-19 16:05:31");
         headerType.setVersion("2.0");
 
+        //组装最后的数据
+        VerifyOrderRequest request = new VerifyOrderRequest();
+        request.setHeader(headerType);
+        request.setBody(bodyType);
+
+        String xml = XMLParseUtil.convertToXml(request);
+        String xmlBodyString = StringUtils.replaceBlank(XMLParseUtil.subBodyStringForXml(xml));
+
         //3.编码sign
-        String xmlBase64 = new BASE64Encoder().encode(xmlBody.getBytes()).trim();
+        String xmlBase64 =org.bouncycastle.util.encoders.Base64.toBase64String(xmlBodyString.getBytes("UTF-8"));
         StringBuffer buffer = new StringBuffer();
         buffer.append(headerType.getAccountId());
         buffer.append(headerType.getServiceName());
@@ -172,11 +179,6 @@ public class CtripResourceTest extends BaseRESTfulService {
         buffer.append(signKey);
         String sign = MD5.getMD5String(buffer.toString().getBytes());
         headerType.setSign(sign);
-
-        //组装最后的数据
-        VerifyOrderRequest request = new VerifyOrderRequest();
-        request.setHeader(headerType);
-        request.setBody(bodyType);
 
         return XMLParseUtil.convertToXml(request);
     }
@@ -186,15 +188,12 @@ public class CtripResourceTest extends BaseRESTfulService {
      *
      * @return
      */
-    private String buildStringForTourism(String serviceName) {
+    private String buildStringForTourism(String serviceName) throws UnsupportedEncodingException {
         //构造数据
         //1.构造body信息
         RequestBodyTypeForTrans bodyType = new RequestBodyTypeForTrans();
         bodyType.setDepart("CZS");
         bodyType.setArrive("CD");
-
-        String xml = XMLParseUtil.convertToXml(bodyType);
-        String xmlBody = XMLParseUtil.subStringForXML(xml);
 
         //2.构造header信息
         RequestHeaderType headerType = new RequestHeaderType();
@@ -203,8 +202,16 @@ public class CtripResourceTest extends BaseRESTfulService {
         headerType.setRequestTime("2015-10-19 16:05:31");
         headerType.setVersion("2.0");
 
+        //组装最后的数据
+        VerifyTransRequest request = new VerifyTransRequest();
+        request.setHeader(headerType);
+        request.setBody(bodyType);
+
+        String xml = XMLParseUtil.convertToXml(request);
+        String xmlBodyString = StringUtils.replaceBlank(XMLParseUtil.subBodyStringForXml(xml));
+
         //3.编码sign
-        String xmlBase64 = new BASE64Encoder().encode(xmlBody.getBytes());
+        String xmlBase64 = org.bouncycastle.util.encoders.Base64.toBase64String(xmlBodyString.getBytes("UTF-8"));
         StringBuffer buffer = new StringBuffer();
         buffer.append(headerType.getAccountId());
         buffer.append(headerType.getServiceName());
@@ -214,11 +221,6 @@ public class CtripResourceTest extends BaseRESTfulService {
         buffer.append(signKey);
         String sign = MD5.getMD5String(buffer.toString().getBytes());
         headerType.setSign(sign);
-
-        //组装最后的数据
-        VerifyTransRequest request = new VerifyTransRequest();
-        request.setHeader(headerType);
-        request.setBody(bodyType);
 
         return XMLParseUtil.convertToXml(request);
     }
@@ -230,7 +232,7 @@ public class CtripResourceTest extends BaseRESTfulService {
      */
     @POST
     @Path(SysConfig.VERIFY_ORDER_METHOD)
-    public VerifyResponse verifyOrder() {
+    public VerifyResponse verifyOrder() throws UnsupportedEncodingException {
         return ctripValidator.validatePre(this.buildString(SysConfig.VERIFY_ORDER_METHOD), SysConfig.ORDER_HANDLER);
     }
 
@@ -241,7 +243,7 @@ public class CtripResourceTest extends BaseRESTfulService {
      */
     @POST
     @Path(SysConfig.CREATE_ORDER_METHOD)
-    public VerifyResponse createOrder() {
+    public VerifyResponse createOrder() throws UnsupportedEncodingException {
         return ctripValidator.validatePre(this.buildString(SysConfig.CREATE_ORDER_METHOD), SysConfig.ORDER_HANDLER);
     }
 
@@ -253,7 +255,7 @@ public class CtripResourceTest extends BaseRESTfulService {
      */
     @POST
     @Path(SysConfig.CANCEL_ORDER_METHOD)
-    public VerifyResponse cancelOrder() {
+    public VerifyResponse cancelOrder() throws UnsupportedEncodingException {
         return ctripValidator.validatePre(this.buildStringForCancelOrder(SysConfig.CANCEL_ORDER_METHOD), SysConfig.ORDER_HANDLER);
     }
 
@@ -264,7 +266,7 @@ public class CtripResourceTest extends BaseRESTfulService {
      */
     @POST
     @Path(SysConfig.QUERY_ORDER_METHOD)
-    public VerifyResponse queryOrder() {
+    public VerifyResponse queryOrder() throws UnsupportedEncodingException {
         return ctripValidator.validatePre(this.buildStringForQueryOrder(SysConfig.QUERY_ORDER_METHOD), SysConfig.ORDER_HANDLER);
     }
 
@@ -275,7 +277,7 @@ public class CtripResourceTest extends BaseRESTfulService {
      */
     @POST
     @Path(SysConfig.RESEND_METHOD)
-    public VerifyResponse resend() {
+    public VerifyResponse resend() throws UnsupportedEncodingException {
         return ctripValidator.validatePre(this.buildStringForQueryOrder(SysConfig.RESEND_METHOD), SysConfig.ORDER_HANDLER);
     }
 
@@ -286,7 +288,7 @@ public class CtripResourceTest extends BaseRESTfulService {
      */
     @POST
     @Path(SysConfig.QUERY_TOURISM_METHOD)
-    public VerifyResponse tourismHandler() {
+    public VerifyResponse tourismHandler() throws UnsupportedEncodingException {
         return ctripValidator.validatePre(this.buildStringForTourism(SysConfig.QUERY_TOURISM_METHOD), SysConfig.TOURISM_HANDLER);
     }
 
