@@ -73,4 +73,9 @@ public enum CtripOrderError {
         this.errorMessage = errorMessage;
     }
 
+    public CtripOrderError custom(String errorMessage) {
+        this.setErrorMessage(errorMessage);
+        return this;
+    }
+
 }

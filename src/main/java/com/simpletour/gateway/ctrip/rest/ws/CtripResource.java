@@ -14,6 +14,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import java.text.ParseException;
 
 /**
  * Created by songfujie on 15/10/28.
@@ -35,7 +36,7 @@ public class CtripResource extends BaseRESTfulService {
      */
     @POST
     @Path(SysConfig.ORDER_HANDLER)
-    public VerifyResponse orderHandler(String request) {
+    public VerifyResponse orderHandler(String request) throws ParseException {
         return ctripValidator.validatePre(request, SysConfig.ORDER_HANDLER);
     }
 
@@ -47,7 +48,7 @@ public class CtripResource extends BaseRESTfulService {
      */
     @POST
     @Path(SysConfig.TOURISM_HANDLER)
-    public VerifyResponse tourismHandler(String request) {
+    public VerifyResponse tourismHandler(String request) throws ParseException {
         return ctripValidator.validatePre(request, SysConfig.TOURISM_HANDLER);
     }
 }

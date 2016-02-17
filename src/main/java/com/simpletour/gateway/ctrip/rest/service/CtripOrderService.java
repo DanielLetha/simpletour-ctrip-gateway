@@ -3,6 +3,8 @@ package com.simpletour.gateway.ctrip.rest.service;
 import com.simpletour.gateway.ctrip.rest.pojo.VerifyOrderRequest;
 import com.simpletour.gateway.ctrip.rest.pojo.VerifyOrderResponse;
 
+import java.text.ParseException;
+
 /**
  * Created by Mario on 2016/1/3.
  */
@@ -37,7 +39,7 @@ public interface CtripOrderService {
      * @param verifyOrderRequest 请求实体
      * @return
      */
-    VerifyOrderResponse queryOrder(VerifyOrderRequest verifyOrderRequest);
+    VerifyOrderResponse queryOrder(VerifyOrderRequest verifyOrderRequest) throws ParseException;
 
     /**
      * 凭证重发接口

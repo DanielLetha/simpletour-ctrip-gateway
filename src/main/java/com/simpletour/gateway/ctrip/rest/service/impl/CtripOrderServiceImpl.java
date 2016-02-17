@@ -29,9 +29,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.text.ParseException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by Mario on 2016/1/3.
@@ -67,7 +67,7 @@ public class CtripOrderServiceImpl implements CtripOrderService {
         try {
             orderBiz.validateOrder(order);
         } catch (BaseSystemException e) {
-            return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.VALIDATE_FAILED), null);
+            return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.VALIDATE_FAILED.custom(e.getError().getErrorMessage())), null);
         }
         //验证车次是否排班,并设置可用库存为0
         if (!orderService.validateIsBusPlanAvailable(order.getOrderItems().get(0), order)) {
@@ -78,12 +78,12 @@ public class CtripOrderServiceImpl implements CtripOrderService {
         Optional<Stock> stock = stockBiz.getStock(order.getOrderItems().get(0).getType() == OrderItem.Type.tourism ?
                 order.getOrderItems().get(0).getTourism() : order.getOrderItems().get(0).getProduct(), order.getOrderItems().get(0).getDate(), true);
         if (!stock.isPresent()) {
-            return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.VALIDATE_FAILED), new ResponseBodyType(0));
+            return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.STOCK_NOT_ENOUGH), new ResponseBodyType(0));
         }
         try {
             stockBiz.checkDemandQuantity(ctripOrderBo.asOrder());
         } catch (BaseSystemException e) {
-            return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.VALIDATE_FAILED), new ResponseBodyType(stock.get().getAvailableQuantity()));
+            return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.STOCK_NOT_ENOUGH), new ResponseBodyType(stock.get().getAvailableQuantity()));
         }
         return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.OPERATION_SUCCESS), new ResponseBodyType(stock.get().getAvailableQuantity()));
     }
@@ -97,13 +97,21 @@ public class CtripOrderServiceImpl implements CtripOrderService {
         //传入order模块,进行业务单元处理
         Order order = ctripOrderBo.asOrder();
 
+        //验证库存
+        //先检查库存还有多少
+        Optional<Stock> stock = stockBiz.getStock(order.getOrderItems().get(0).getType() == OrderItem.Type.tourism ?
+                order.getOrderItems().get(0).getTourism() : order.getOrderItems().get(0).getProduct(), order.getOrderItems().get(0).getDate(), true);
+        if (!stock.isPresent()) {
+            return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.STOCK_NOT_ENOUGH), new ResponseBodyType(0));
+        }
+
         //验证传进来的otaOrderId是否存在并且是否是数据库已存在
         if (!(order.getSourceOrderId() == null || order.getSourceOrderId().isEmpty())) {
             AndConditionSet andConditionSet = new AndConditionSet();
             andConditionSet.addCondition("sourceOrderId", order.getSourceOrderId(), Condition.MatchType.eq);
             List<Order> orders = orderService.findOrdersByConditions(andConditionSet, IBaseDao.SortBy.ASC);
             if (!(orders == null || orders.isEmpty()))
-                return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.ORDER_HAS_BEEN_USED), new ResponseBodyType(0));
+                return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.OPERATION_SUCCESS.custom("该订单已经存在")), new ResponseBodyType(stock.get().getAvailableQuantity(), order.getSourceOrderId(), orders.get(0).getId().toString(), ResponseBodyType.SmsCodeType.VENDOR.getVal(), ""));
         }
         //验证传进来的用户是否存在,如果有用户则通过,没有则创建用户
         User userOrginal = userService.getAvailableUserByMobile(order.getMobile());
@@ -118,18 +126,11 @@ public class CtripOrderServiceImpl implements CtripOrderService {
             order.setUserId(userOrginal.getId());
         }
 
-        //验证库存
-        //先检查库存还有多少
-        Optional<Stock> stock = stockBiz.getStock(order.getOrderItems().get(0).getType() == OrderItem.Type.tourism ?
-                order.getOrderItems().get(0).getTourism() : order.getOrderItems().get(0).getProduct(), order.getOrderItems().get(0).getDate(), true);
-        if (!stock.isPresent()) {
-            return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.VALIDATE_FAILED), new ResponseBodyType(0));
-        }
         Optional<Order> orderOptional;
         try {
             orderOptional = orderService.addOrder(order);
-        } catch (Exception e) {
-            return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.ORDER_BOOK_FAILD), new ResponseBodyType(stock.get().getAvailableQuantity()));
+        } catch (BaseSystemException e) {
+            return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.VALIDATE_FAILED.custom(e.getError().getErrorMessage())), new ResponseBodyType(stock.get().getAvailableQuantity()));
         }
 
         Optional<Stock> stockAfter = stockBiz.getStock(order.getOrderItems().get(0).getType() == OrderItem.Type.tourism ?
@@ -137,7 +138,17 @@ public class CtripOrderServiceImpl implements CtripOrderService {
         if (!orderOptional.isPresent()) {
             return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.ORDER_BOOK_FAILD), new ResponseBodyType(stock.get().getAvailableQuantity()));
         }
-        return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.OPERATION_SUCCESS), new ResponseBodyType(stockAfter.get().getAvailableQuantity(), orderOptional.get().getSourceOrderId(), orderOptional.get().getId().toString(), ResponseBodyType.SmsCodeType.VENDOR, ""));
+        //下单成功后发送短信
+        List<String> mobiles = new ArrayList<>();
+        mobiles.add(orderOptional.get().getMobile());
+        String params = DateUtil.convertDateToStr(orderOptional.get().getOrderItems().get(0).getDate(), "yyyy-MM-dd") + "," + orderOptional.get().getOrderItems().get(0).getName();
+        String key = SMSTemplateEnum.PAIDSUCCESSCONTACTS.getKey();
+        try {
+            ismsService.send(threadPoolTaskExecutor, mobiles, key, params);
+        } catch (Exception e) {
+            //do nothing....
+        }
+        return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.OPERATION_SUCCESS), new ResponseBodyType(stockAfter.get().getAvailableQuantity(), orderOptional.get().getSourceOrderId(), orderOptional.get().getId().toString(), ResponseBodyType.SmsCodeType.VENDOR.getVal(), ""));
     }
 
     @Override
@@ -172,7 +183,7 @@ public class CtripOrderServiceImpl implements CtripOrderService {
     }
 
     @Override
-    public VerifyOrderResponse queryOrder(VerifyOrderRequest verifyOrderRequest) {
+    public VerifyOrderResponse queryOrder(VerifyOrderRequest verifyOrderRequest) throws ParseException {
         //获取转化为实体后的数据,并对数据进行组装
         CtripOrderBo ctripOrderBo = new CtripOrderBo(verifyOrderRequest.getHeader(), verifyOrderRequest.getBody());
         //传入order模块,进行业务单元处理
@@ -187,7 +198,18 @@ public class CtripOrderServiceImpl implements CtripOrderService {
         if (!orderOptional.isPresent()) {
             return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.ORDER_QUERY_FAILD), new ResponseBodyType(order.getSourceOrderId(), order.getId().toString()));
         }
-        return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.OPERATION_SUCCESS), new ResponseBodyType(order.getSourceOrderId(), order.getId().toString(), "", order.getAmount(), 1));
+        if (!(orderOptional.get().getOrderStatuses() == null || orderOptional.get().getOrderStatuses().isEmpty())) {
+            OrderStatus orderStatus = orderOptional.get().getOrderStatuses().stream().sorted(Comparator.comparing(OrderStatus::getId)).collect(Collectors.toList()).get(orderOptional.get().getOrderStatuses().size() - 1);
+            if (orderStatus.getStatus() == OrderStatus.Status.CANCELED) {
+                return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.OPERATION_SUCCESS), new ResponseBodyType(order.getSourceOrderId(), order.getId().toString(), "", order.getAmount(), orderOptional.get().getOrderItems().get(0).getCerts().size(), orderOptional.get().getOrderItems().get(0).getCerts().size(), 0));
+            }
+            if (DateUtil.convertStrToDate(DateUtil.convertDateToStr(new Date(), "yyyy-MM-dd"), "yyyy-MM-dd").after(orderOptional.get().getOrderItems().get(0).getDate())) {
+                return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.OPERATION_SUCCESS), new ResponseBodyType(order.getSourceOrderId(), order.getId().toString(), "", order.getAmount(), orderOptional.get().getOrderItems().get(0).getCerts().size(), 0, orderOptional.get().getOrderItems().get(0).getCerts().size()));
+            }
+        } else {
+            return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.ORDER_QUERY_FAILD), new ResponseBodyType(order.getSourceOrderId(), order.getId().toString()));
+        }
+        return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.OPERATION_SUCCESS), new ResponseBodyType(order.getSourceOrderId(), order.getId().toString(), "", order.getAmount(), orderOptional.get().getOrderItems().get(0).getCerts().size(), 0, 0));
     }
 
     @Override

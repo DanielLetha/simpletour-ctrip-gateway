@@ -80,18 +80,20 @@ public class CtripOrderBo {
         order.setSource(source);
         //设置orderItem
         OrderItem orderItem = new OrderItem();
-        if (SysConfig.PRODUCT_TYPE.equals(this.requestBodyType.getExtendInfo().getProductType())) {
-            Product product = new Product();
-            product.setId(Long.parseLong(this.requestBodyType.getProductId()));
-            product.setOnline(true);
-            orderItem.setProduct(product);
-            orderItem.setType(OrderItem.Type.product);
-        } else if (SysConfig.TOURISM_TYPE.equals(this.requestBodyType.getExtendInfo().getProductType())) {
-            Tourism tourism = new Tourism();
-            tourism.setId(Long.parseLong(this.requestBodyType.getProductId()));
-            tourism.setOnline(true);
-            orderItem.setTourism(tourism);
-            orderItem.setType(OrderItem.Type.tourism);
+        if (this.requestBodyType.getExtendInfo() != null) {
+            if (SysConfig.PRODUCT_TYPE.equals(this.requestBodyType.getExtendInfo().getProductType())) {
+                Product product = new Product();
+                product.setId(Long.parseLong(this.requestBodyType.getProductId()));
+                product.setOnline(true);
+                orderItem.setProduct(product);
+                orderItem.setType(OrderItem.Type.product);
+            } else if (SysConfig.TOURISM_TYPE.equals(this.requestBodyType.getExtendInfo().getProductType())) {
+                Tourism tourism = new Tourism();
+                tourism.setId(Long.parseLong(this.requestBodyType.getProductId()));
+                tourism.setOnline(true);
+                orderItem.setTourism(tourism);
+                orderItem.setType(OrderItem.Type.tourism);
+            }
         }
         //TODO.....后台的价格和订购数量都是通过查询数据库或者计算得出，这个地方对接时需要注意
         if (!(this.requestBodyType.getPrice() == null || this.requestBodyType.getPrice().isEmpty())) {
@@ -138,7 +140,7 @@ public class CtripOrderBo {
         order.setOrderItems(orderItems);
 
         OrderStatus orderStatus = new OrderStatus();
-        orderStatus.setOperation(OrderStatus.Operation.BOOKING);
+        orderStatus.setOperation(OrderStatus.Operation.FINISH);
         orderStatus.setStatus(OrderStatus.getStatusByOperation(orderStatus.getOperation()));
         orderStatus.setOrder(order);
         orderStatus.setOperateTime(System.currentTimeMillis());

@@ -2,6 +2,7 @@ package com.simpletour.gateway.ctrip.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -68,7 +69,7 @@ public class DateUtil {
         return hour + ":" + second;
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ParseException {
 //        try {
 //            Date date = convertStrToDate("2016-01-06", "yyyy-MM-dd");
 //            System.out.println(date.getTime());
@@ -79,5 +80,8 @@ public class DateUtil {
 //        System.out.println(convertDateToStr(new Date(), "yyyy-MM-dd"));
         Long time = 178260L;
         System.out.println(convertLongToTime(time));
+        Date date = new Date();
+        String dateFormat = convertDateToStr(date, "yyyy-MM-dd");
+        System.out.println(convertStrToDate(dateFormat, "yyyy-MM-dd"));
     }
 }

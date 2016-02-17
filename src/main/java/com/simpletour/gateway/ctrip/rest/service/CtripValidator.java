@@ -3,6 +3,8 @@ package com.simpletour.gateway.ctrip.rest.service;
 import com.simpletour.gateway.ctrip.rest.pojo.VerifyRequest;
 import com.simpletour.gateway.ctrip.rest.pojo.VerifyResponse;
 
+import java.text.ParseException;
+
 /**
  * Created by Mario on 2016/1/15.
  */
@@ -14,5 +16,5 @@ public interface CtripValidator {
      * @param methodName 方法名
      * @return
      */
-    VerifyResponse validatePre(String request, String methodName);
+    VerifyResponse validatePre(String request, String methodName) throws ParseException;
 }

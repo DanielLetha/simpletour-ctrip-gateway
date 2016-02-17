@@ -53,7 +53,7 @@ public class ResponseBodyType {
      * 2、OTA发凭证短信
      * 3、OTA发二维码短信(含凭证码)
      */
-    private SmsCodeType smsCodeType;
+    private Integer smsCodeType = SmsCodeType.VENDOR.getVal();
 
     /**
      * 短信凭证码
@@ -91,6 +91,11 @@ public class ResponseBodyType {
     private Integer count;
 
     /**
+     * 实际使用数量
+     */
+    private Integer useCount;
+
+    /**
      * constructor
      */
     ResponseBodyType() {
@@ -105,7 +110,7 @@ public class ResponseBodyType {
         this.inventory = inventory;
     }
 
-    public ResponseBodyType(Integer inventory, String otaOrderId, String vendorOrderId, SmsCodeType smsCodeType, String smsCode) {
+    public ResponseBodyType(Integer inventory, String otaOrderId, String vendorOrderId, Integer smsCodeType, String smsCode) {
         this.inventory = inventory;
         this.otaOrderId = otaOrderId;
         this.vendorOrderId = vendorOrderId;
@@ -119,12 +124,14 @@ public class ResponseBodyType {
         this.auditDuration = auditDuration;
     }
 
-    public ResponseBodyType(String otaOrderId, String vendorOrderId, String orderStatus, BigDecimal amount, Integer count) {
+    public ResponseBodyType(String otaOrderId, String vendorOrderId, String orderStatus, BigDecimal amount, Integer count,Integer cancelCount,Integer useCount) {
         this.otaOrderId = otaOrderId;
         this.vendorOrderId = vendorOrderId;
         this.orderStatus = orderStatus;
         this.amount = amount;
         this.count = count;
+        this.cancelCount = cancelCount;
+        this.useCount = useCount;
     }
 
     /**
@@ -154,12 +161,28 @@ public class ResponseBodyType {
         this.vendorOrderId = vendorOrderId;
     }
 
-    public SmsCodeType getSmsCodeType() {
+    public Integer getSmsCodeType() {
         return smsCodeType;
     }
 
-    public void setSmsCodeType(SmsCodeType smsCodeType) {
+    public void setSmsCodeType(Integer smsCodeType) {
         this.smsCodeType = smsCodeType;
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+
+    public Integer getCount() {
+        return count;
+    }
+
+    public void setCount(Integer count) {
+        this.count = count;
     }
 
     public String getSmsCode() {
@@ -192,5 +215,13 @@ public class ResponseBodyType {
 
     public void setAuditDuration(Integer auditDuration) {
         this.auditDuration = auditDuration;
+    }
+
+    public Integer getUseCount() {
+        return useCount;
+    }
+
+    public void setUseCount(Integer useCount) {
+        this.useCount = useCount;
     }
 }

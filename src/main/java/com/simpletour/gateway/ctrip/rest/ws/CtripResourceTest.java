@@ -25,6 +25,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -232,7 +233,7 @@ public class CtripResourceTest extends BaseRESTfulService {
      */
     @POST
     @Path(SysConfig.VERIFY_ORDER_METHOD)
-    public VerifyResponse verifyOrder() throws UnsupportedEncodingException {
+    public VerifyResponse verifyOrder() throws UnsupportedEncodingException, ParseException {
         return ctripValidator.validatePre(this.buildString(SysConfig.VERIFY_ORDER_METHOD), SysConfig.ORDER_HANDLER);
     }
 
@@ -243,7 +244,7 @@ public class CtripResourceTest extends BaseRESTfulService {
      */
     @POST
     @Path(SysConfig.CREATE_ORDER_METHOD)
-    public VerifyResponse createOrder() throws UnsupportedEncodingException {
+    public VerifyResponse createOrder() throws UnsupportedEncodingException, ParseException {
         return ctripValidator.validatePre(this.buildString(SysConfig.CREATE_ORDER_METHOD), SysConfig.ORDER_HANDLER);
     }
 
@@ -255,7 +256,7 @@ public class CtripResourceTest extends BaseRESTfulService {
      */
     @POST
     @Path(SysConfig.CANCEL_ORDER_METHOD)
-    public VerifyResponse cancelOrder() throws UnsupportedEncodingException {
+    public VerifyResponse cancelOrder() throws UnsupportedEncodingException, ParseException {
         return ctripValidator.validatePre(this.buildStringForCancelOrder(SysConfig.CANCEL_ORDER_METHOD), SysConfig.ORDER_HANDLER);
     }
 
@@ -266,7 +267,7 @@ public class CtripResourceTest extends BaseRESTfulService {
      */
     @POST
     @Path(SysConfig.QUERY_ORDER_METHOD)
-    public VerifyResponse queryOrder() throws UnsupportedEncodingException {
+    public VerifyResponse queryOrder() throws UnsupportedEncodingException, ParseException {
         return ctripValidator.validatePre(this.buildStringForQueryOrder(SysConfig.QUERY_ORDER_METHOD), SysConfig.ORDER_HANDLER);
     }
 
@@ -277,7 +278,7 @@ public class CtripResourceTest extends BaseRESTfulService {
      */
     @POST
     @Path(SysConfig.RESEND_METHOD)
-    public VerifyResponse resend() throws UnsupportedEncodingException {
+    public VerifyResponse resend() throws UnsupportedEncodingException, ParseException {
         return ctripValidator.validatePre(this.buildStringForQueryOrder(SysConfig.RESEND_METHOD), SysConfig.ORDER_HANDLER);
     }
 
@@ -288,7 +289,7 @@ public class CtripResourceTest extends BaseRESTfulService {
      */
     @POST
     @Path(SysConfig.QUERY_TOURISM_METHOD)
-    public VerifyResponse tourismHandler() throws UnsupportedEncodingException {
+    public VerifyResponse tourismHandler() throws UnsupportedEncodingException, ParseException {
         return ctripValidator.validatePre(this.buildStringForTourism(SysConfig.QUERY_TOURISM_METHOD), SysConfig.TOURISM_HANDLER);
     }
 

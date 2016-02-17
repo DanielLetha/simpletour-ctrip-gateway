@@ -19,6 +19,7 @@ import sun.misc.BASE64Encoder;
 
 import javax.annotation.Resource;
 import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
 
 /**
  * Created by Mario on 2016/1/3.
@@ -41,7 +42,7 @@ public class CtripValidatorImpl implements CtripValidator {
      * @param request
      * @return
      */
-    public VerifyResponse validatePre(String request, String methodName) {
+    public VerifyResponse validatePre(String request, String methodName) throws ParseException {
         if (request == null || request.isEmpty()) {
             return new VerifyResponse(new ResponseHeaderType(CtripOrderError.JSON_RESOLVE_FAILED));
         }
@@ -86,8 +87,8 @@ public class CtripValidatorImpl implements CtripValidator {
                 return ctripOrderService.verifyOrder(verifyOrderRequest);
             case SysConfig.CREATE_ORDER_METHOD:
                 return ctripOrderService.createOrder(verifyOrderRequest);
-            case SysConfig.CANCEL_ORDER_METHOD:
-                return ctripOrderService.cancelOrder(verifyOrderRequest);
+//            case SysConfig.CANCEL_ORDER_METHOD:
+//                return ctripOrderService.cancelOrder(verifyOrderRequest);
             case SysConfig.QUERY_ORDER_METHOD:
                 return ctripOrderService.queryOrder(verifyOrderRequest);
             case SysConfig.RESEND_METHOD:
