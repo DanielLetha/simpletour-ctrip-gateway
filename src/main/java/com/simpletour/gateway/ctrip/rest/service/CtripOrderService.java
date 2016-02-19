@@ -31,7 +31,7 @@ public interface CtripOrderService {
      * @param verifyOrderRequest 请求实体
      * @return
      */
-    VerifyOrderResponse cancelOrder(VerifyOrderRequest verifyOrderRequest);
+    VerifyOrderResponse cancelOrder(VerifyOrderRequest verifyOrderRequest) throws ParseException;
 
     /**
      * 订单查询接口

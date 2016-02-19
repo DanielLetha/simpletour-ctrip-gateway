@@ -34,7 +34,8 @@ public enum CtripOrderError {
     ORDER_ID_NOT_EXISTED("2001", "该订单号不存在"),
     ORDER_HAS_BEEN_USED("2002", "该订单已经使用"),
     ORDER_STATUS_UPDATE_FAILD("2005", "订单取消失败"),
-
+    ORDER_NULL_BY_ID("2100", "订单不存在"),
+    ORDER_CALL_BACK_NULL("2101", "回调请求异常"),
     /**
      * ==================重发相关====================
      **/
@@ -46,6 +47,10 @@ public enum CtripOrderError {
      **/
     ORDER_ID_NULL("4001", "订单号不存在"),
     ORDER_QUERY_FAILD("4002", "订单查询失败"),
+    /**
+     * ===================自定义异常===================
+     **/
+    ORDER_TRANSFER_TO_REQUEST_FAILED("9001", "构造请求异常"),
 
     DELETE_FAILD("0005", "delete data failed");
 

@@ -17,6 +17,19 @@ public class RequestHeaderType {
     private String version;
     private String sign;
 
+    /**
+     * constructor
+     */
+    public RequestHeaderType() {
+    }
+
+    public RequestHeaderType(String accountId, String serviceName, String requestTime, String version) {
+        this.accountId = accountId;
+        this.serviceName = serviceName;
+        this.requestTime = requestTime;
+        this.version = version;
+    }
+
     public String getAccountId() {
         return accountId;
     }

@@ -141,7 +141,7 @@ public class CtripResourceTest extends BaseRESTfulService {
         buffer.append(xmlBase64);
         buffer.append(headerType.getVersion());
         buffer.append(signKey);
-        String sign = MD5.getMD5String(buffer.toString().getBytes());
+        String sign = MD5.getMD5String(buffer.toString().getBytes()).toLowerCase();
         headerType.setSign(sign);
 
         return XMLParseUtil.convertToXml(request);
@@ -178,7 +178,7 @@ public class CtripResourceTest extends BaseRESTfulService {
         buffer.append(xmlBase64);
         buffer.append(headerType.getVersion());
         buffer.append(signKey);
-        String sign = MD5.getMD5String(buffer.toString().getBytes());
+        String sign = MD5.getMD5String(buffer.toString().getBytes()).toLowerCase();
         headerType.setSign(sign);
 
         return XMLParseUtil.convertToXml(request);
@@ -220,7 +220,7 @@ public class CtripResourceTest extends BaseRESTfulService {
         buffer.append(xmlBase64);
         buffer.append(headerType.getVersion());
         buffer.append(signKey);
-        String sign = MD5.getMD5String(buffer.toString().getBytes());
+        String sign = MD5.getMD5String(buffer.toString().getBytes()).toLowerCase();
         headerType.setSign(sign);
 
         return XMLParseUtil.convertToXml(request);

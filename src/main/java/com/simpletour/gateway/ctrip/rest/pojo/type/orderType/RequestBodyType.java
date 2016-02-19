@@ -27,7 +27,19 @@ public class RequestBodyType {
     private List<PassengerInfo> passengerInfos;
     private String useDate;
     private String useEndDate;
+    private Integer cancelCount;
+    private Integer orderStatus;
     private ExtendInfoType extendInfo;
+
+    public RequestBodyType() {
+    }
+
+    public RequestBodyType(String otaOrderId, String vendorOrderId, Integer cancelCount, Integer orderStatus) {
+        this.otaOrderId = otaOrderId;
+        this.vendorOrderId = vendorOrderId;
+        this.cancelCount = cancelCount;
+        this.orderStatus = orderStatus;
+    }
 
     public String getOtaOrderId() {
         return otaOrderId;
@@ -141,5 +153,21 @@ public class RequestBodyType {
 
     public void setExtendInfo(ExtendInfoType extendInfo) {
         this.extendInfo = extendInfo;
+    }
+
+    public Integer getCancelCount() {
+        return cancelCount;
+    }
+
+    public void setCancelCount(Integer cancelCount) {
+        this.cancelCount = cancelCount;
+    }
+
+    public Integer getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void setOrderStatus(Integer orderStatus) {
+        this.orderStatus = orderStatus;
     }
 }

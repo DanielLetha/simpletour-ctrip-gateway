@@ -63,7 +63,7 @@ public class CtripValidatorImpl implements CtripValidator {
         }
 
         //过滤出body信息
-        String bodyString = StringUtils.replaceBlank(XMLParseUtil.subBodyStringForXml(request));
+        String bodyString = StringUtils.formatXml(XMLParseUtil.subBodyStringForXml(request));
 
         //取文件头转为requestHeaderType实体类
         RequestHeaderType requestHeaderType = SysConfig.ORDER_HANDLER.equals(methodName) ? verifyOrderRequest.getHeader() : (SysConfig.TOURISM_HANDLER.equals(methodName) ? verifyTransRequest.getHeader() : null);
@@ -87,8 +87,8 @@ public class CtripValidatorImpl implements CtripValidator {
                 return ctripOrderService.verifyOrder(verifyOrderRequest);
             case SysConfig.CREATE_ORDER_METHOD:
                 return ctripOrderService.createOrder(verifyOrderRequest);
-//            case SysConfig.CANCEL_ORDER_METHOD:
-//                return ctripOrderService.cancelOrder(verifyOrderRequest);
+            case SysConfig.CANCEL_ORDER_METHOD:
+                return ctripOrderService.cancelOrder(verifyOrderRequest);
             case SysConfig.QUERY_ORDER_METHOD:
                 return ctripOrderService.queryOrder(verifyOrderRequest);
             case SysConfig.RESEND_METHOD:

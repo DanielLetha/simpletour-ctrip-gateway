@@ -17,7 +17,7 @@
 
     <context:component-scan base-package="com.simpletour"/>
 
-    <context:property-placeholder location="classpath:db.properties,classpath:redis.properties,classpath:signkey.properties"/>
+    <context:property-placeholder location="classpath:db.properties,classpath:redis.properties,classpath:signkey.properties,classpath:callbackurl.properties"/>
 
     <!--配置redis-->
     <bean id="redisManager" class="com.simpletour.redis.RedisClientManager" init-method="init" destroy-method="destory">

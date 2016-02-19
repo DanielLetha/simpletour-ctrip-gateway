@@ -164,8 +164,8 @@ public class CtripOrderBo {
         order.setSourceOrderId(this.requestBodyType.getOtaOrderId());
         orderStatus.setOrder(order);
         orderStatus.setOperateTime(System.currentTimeMillis());
-        orderStatus.setOperation(OrderStatus.Operation.CANCEL);
-        orderStatus.setStatus(OrderStatus.Status.CANCELED);
+        orderStatus.setOperation(OrderStatus.Operation.MODIFY);
+        orderStatus.setStatus(OrderStatus.Status.MODIFY);
         orderStatus.setRemark("来自携程的订单");
         return orderStatus;
     }

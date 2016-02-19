@@ -172,7 +172,7 @@ public class CtripOrderServiceImpl implements CtripOrderService {
     }
 
     @Override
-    public VerifyOrderResponse cancelOrder(VerifyOrderRequest verifyOrderRequest) {
+    public VerifyOrderResponse cancelOrder(VerifyOrderRequest verifyOrderRequest) throws ParseException {
         //获取转化为实体后的数据,并对数据进行组装
         CtripOrderBo ctripOrderStatusBo = new CtripOrderBo(verifyOrderRequest.getHeader(), verifyOrderRequest.getBody());
         //传入orderStatus模块,进行业务单元处理
@@ -189,17 +189,34 @@ public class CtripOrderServiceImpl implements CtripOrderService {
             return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.ORDER_ID_EMPTY), null);
         }
 
+        //判断当前订单状态,当前是已取消或者是已退款，当前是修改中，当前是订单已经使用，都不会主动去更新订单状态
+        if (!(orderOptional.get().getOrderStatuses() == null || orderOptional.get().getOrderStatuses().isEmpty())) {
+            OrderStatus orderStatusOriginal = orderOptional.get().getOrderStatuses().stream().sorted(Comparator.comparing(OrderStatus::getId)).collect(Collectors.toList()).get(orderOptional.get().getOrderStatuses().size() - 1);
+            //订单已经成功取消
+            if (orderStatusOriginal.getStatus() == OrderStatus.Status.CANCELED || orderStatusOriginal.getStatus() == OrderStatus.Status.REFUND) {
+                return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.OPERATION_SUCCESS), new ResponseBodyType(orderOptional.get().getOrderItems().get(0).getCerts().size(), "3", 8));
+            }
+            //订单取消申请中,订单状态为修改中
+            if (orderStatusOriginal.getStatus() == OrderStatus.Status.MODIFY) {
+                return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.OPERATION_SUCCESS), new ResponseBodyType(orderOptional.get().getOrderItems().get(0).getCerts().size(), "0", 8));
+            }
+            //如果申请取消的时间在订单已经使用之后，认为订单不能取消，申请取消订单失败
+            if (DateUtil.convertStrToDate(DateUtil.convertDateToStr(new Date(), "yyyy-MM-dd"), "yyyy-MM-dd").after(orderOptional.get().getOrderItems().get(0).getDate())) {
+                return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.ORDER_HAS_BEEN_USED), new ResponseBodyType(0, "4", 8));
+            }
+        }
+
         orderStatus.setOrder(orderOptional.get());
 
         try {
             orderStatusOptional = orderService.updateOrderStatus(orderStatus);
         } catch (Exception e) {
-            return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.ORDER_STATUS_UPDATE_FAILD), new ResponseBodyType(1, "4", 0));
+            return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.ORDER_STATUS_UPDATE_FAILD), new ResponseBodyType(orderOptional.get().getOrderItems().get(0).getCerts().size(), "4", 8));
         }
         if (!orderStatusOptional.isPresent()) {
-            return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.ORDER_STATUS_UPDATE_FAILD), new ResponseBodyType(1, "4", 0));
+            return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.ORDER_STATUS_UPDATE_FAILD), new ResponseBodyType(orderOptional.get().getOrderItems().get(0).getCerts().size(), "4", 8));
         }
-        return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.OPERATION_SUCCESS), new ResponseBodyType(1, "2", 0));
+        return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.OPERATION_SUCCESS), new ResponseBodyType(orderOptional.get().getOrderItems().get(0).getCerts().size(), "2", 0));
     }
 
     @Override
@@ -220,16 +237,21 @@ public class CtripOrderServiceImpl implements CtripOrderService {
         }
         if (!(orderOptional.get().getOrderStatuses() == null || orderOptional.get().getOrderStatuses().isEmpty())) {
             OrderStatus orderStatus = orderOptional.get().getOrderStatuses().stream().sorted(Comparator.comparing(OrderStatus::getId)).collect(Collectors.toList()).get(orderOptional.get().getOrderStatuses().size() - 1);
-            if (orderStatus.getStatus() == OrderStatus.Status.CANCELED) {
-                return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.OPERATION_SUCCESS), new ResponseBodyType(order.getSourceOrderId(), order.getId().toString(), "", order.getAmount(), orderOptional.get().getOrderItems().get(0).getCerts().size(), orderOptional.get().getOrderItems().get(0).getCerts().size(), 0));
+            //订单已经成功取消
+            if (orderStatus.getStatus() == OrderStatus.Status.CANCELED || orderStatus.getStatus() == OrderStatus.Status.REFUND) {
+                return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.OPERATION_SUCCESS), new ResponseBodyType(order.getSourceOrderId(), order.getId().toString(), "3", order.getAmount(), orderOptional.get().getOrderItems().get(0).getCerts().size(), orderOptional.get().getOrderItems().get(0).getCerts().size(), 0));
+            }
+            //订单取消申请中,订单状态位修改中
+            if (orderStatus.getStatus() == OrderStatus.Status.MODIFY) {
+                return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.OPERATION_SUCCESS), new ResponseBodyType(order.getSourceOrderId(), order.getId().toString(), "2", order.getAmount(), orderOptional.get().getOrderItems().get(0).getCerts().size(), orderOptional.get().getOrderItems().get(0).getCerts().size(), 0));
             }
             if (DateUtil.convertStrToDate(DateUtil.convertDateToStr(new Date(), "yyyy-MM-dd"), "yyyy-MM-dd").after(orderOptional.get().getOrderItems().get(0).getDate())) {
-                return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.OPERATION_SUCCESS), new ResponseBodyType(order.getSourceOrderId(), order.getId().toString(), "", order.getAmount(), orderOptional.get().getOrderItems().get(0).getCerts().size(), 0, orderOptional.get().getOrderItems().get(0).getCerts().size()));
+                return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.OPERATION_SUCCESS), new ResponseBodyType(order.getSourceOrderId(), order.getId().toString(), "5", order.getAmount(), orderOptional.get().getOrderItems().get(0).getCerts().size(), 0, orderOptional.get().getOrderItems().get(0).getCerts().size()));
             }
+            return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.OPERATION_SUCCESS), new ResponseBodyType(order.getSourceOrderId(), order.getId().toString(), "1", order.getAmount(), orderOptional.get().getOrderItems().get(0).getCerts().size(), 0, 0));
         } else {
             return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.ORDER_QUERY_FAILD), new ResponseBodyType(order.getSourceOrderId(), order.getId().toString()));
         }
-        return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.OPERATION_SUCCESS), new ResponseBodyType(order.getSourceOrderId(), order.getId().toString(), "", order.getAmount(), orderOptional.get().getOrderItems().get(0).getCerts().size(), 0, 0));
     }
 
     @Override

@@ -5,14 +5,13 @@ import com.simpletour.gateway.ctrip.config.SysConfig;
 import com.simpletour.gateway.ctrip.rest.pojo.VerifyOrderRequest;
 import com.simpletour.gateway.ctrip.rest.pojo.VerifyResponse;
 import com.simpletour.gateway.ctrip.rest.pojo.VerifyTransRequest;
+import com.simpletour.gateway.ctrip.rest.service.CtripCallBackUrl;
+import com.simpletour.gateway.ctrip.rest.service.CtripOrderService;
 import com.simpletour.gateway.ctrip.rest.service.CtripValidator;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.text.ParseException;
 
@@ -20,13 +19,16 @@ import java.text.ParseException;
  * Created by songfujie on 15/10/28.
  */
 @Path("ctrip")
-@Consumes({MediaType.APPLICATION_XML})
-@Produces({MediaType.APPLICATION_XML})
+@Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 @Component
 public class CtripResource extends BaseRESTfulService {
 
     @Resource
     private CtripValidator ctripValidator;
+
+    @Resource
+    private CtripCallBackUrl ctripCallBackUrl;
 
     /**
      * 订单模块处理接口
@@ -50,5 +52,11 @@ public class CtripResource extends BaseRESTfulService {
     @Path(SysConfig.TOURISM_HANDLER)
     public VerifyResponse tourismHandler(String request) throws ParseException {
         return ctripValidator.validatePre(request, SysConfig.TOURISM_HANDLER);
+    }
+
+    @POST
+    @Path(SysConfig.CALL_BACK_URL)
+    public VerifyResponse callBackHandler(String orderId) {
+        return ctripCallBackUrl.getCancelOrderCallBack(orderId);
     }
 }
