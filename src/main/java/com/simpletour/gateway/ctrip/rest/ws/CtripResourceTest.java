@@ -16,7 +16,6 @@ import com.simpletour.gateway.ctrip.util.StringUtils;
 import com.simpletour.gateway.ctrip.util.XMLParseUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import sun.misc.BASE64Encoder;
 
 import javax.annotation.Resource;
 import javax.ws.rs.Consumes;
@@ -93,7 +92,7 @@ public class CtripResourceTest extends BaseRESTfulService {
         request.setBody(bodyType);
 
         String xml = XMLParseUtil.convertToXml(request);
-        String xmlBodyString = StringUtils.replaceBlank(XMLParseUtil.subBodyStringForXml(xml));
+        String xmlBodyString = StringUtils.formatXml(XMLParseUtil.subBodyStringForXml(xml));
 
         //3.编码sign
         String xmlBase64 = org.bouncycastle.util.encoders.Base64.toBase64String(xmlBodyString.getBytes("UTF-8"));
@@ -130,7 +129,7 @@ public class CtripResourceTest extends BaseRESTfulService {
         request.setBody(bodyType);
 
         String xml = XMLParseUtil.convertToXml(request);
-        String xmlBodyString = StringUtils.replaceBlank(XMLParseUtil.subBodyStringForXml(xml));
+        String xmlBodyString = StringUtils.formatXml(XMLParseUtil.subBodyStringForXml(xml));
 
         //3.编码sign
         String xmlBase64 = org.bouncycastle.util.encoders.Base64.toBase64String(xmlBodyString.getBytes("UTF-8"));
@@ -167,7 +166,7 @@ public class CtripResourceTest extends BaseRESTfulService {
         request.setBody(bodyType);
 
         String xml = XMLParseUtil.convertToXml(request);
-        String xmlBodyString = StringUtils.replaceBlank(XMLParseUtil.subBodyStringForXml(xml));
+        String xmlBodyString = StringUtils.formatXml(XMLParseUtil.subBodyStringForXml(xml));
 
         //3.编码sign
         String xmlBase64 =org.bouncycastle.util.encoders.Base64.toBase64String(xmlBodyString.getBytes("UTF-8"));
@@ -209,7 +208,7 @@ public class CtripResourceTest extends BaseRESTfulService {
         request.setBody(bodyType);
 
         String xml = XMLParseUtil.convertToXml(request);
-        String xmlBodyString = StringUtils.replaceBlank(XMLParseUtil.subBodyStringForXml(xml));
+        String xmlBodyString = StringUtils.formatXml(XMLParseUtil.subBodyStringForXml(xml));
 
         //3.编码sign
         String xmlBase64 = org.bouncycastle.util.encoders.Base64.toBase64String(xmlBodyString.getBytes("UTF-8"));
