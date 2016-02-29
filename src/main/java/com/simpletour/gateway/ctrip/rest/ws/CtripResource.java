@@ -54,9 +54,15 @@ public class CtripResource extends BaseRESTfulService {
         return ctripValidator.validatePre(request, SysConfig.TOURISM_HANDLER);
     }
 
+    /**
+     * 取消回调接口
+     *
+     * @param request
+     * @return
+     */
     @POST
     @Path(SysConfig.CALL_BACK_URL)
-    public VerifyResponse callBackHandler(String orderId) {
-        return ctripCallBackUrl.getCancelOrderCallBack(orderId);
+    public VerifyResponse callBackHandler(String request) {
+        return ctripCallBackUrl.getCancelOrderCallBack(request);
     }
 }

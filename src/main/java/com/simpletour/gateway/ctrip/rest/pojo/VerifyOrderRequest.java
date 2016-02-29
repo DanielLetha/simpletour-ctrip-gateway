@@ -39,9 +39,15 @@ public class VerifyOrderRequest extends VerifyRequest {
      * @return
      * @throws UnsupportedEncodingException
      */
-    public VerifyOrderRequest buildRequest(Order order, String signKey) throws UnsupportedEncodingException {
+    public VerifyOrderRequest buildRequest(Order order, String signKey,String type ) throws UnsupportedEncodingException {
         this.header = new RequestHeaderType(SysConfig.SIMPLETOUR_ACCOUNT_ID, SysConfig.NOTICE_ORDER_CANCEL, DateUtil.convertDateToStr(new Date(), "yyyy-MM-dd hh:mm:ss"), SysConfig.XIECHENG_VERSION);
-        this.body = new RequestBodyType(order.getSourceOrderId(), order.getId().toString(), order.getOrderItems().get(0).getCerts().size(), 3);
+        Integer orderStatus = 0;
+        if(SysConfig.CANCEL_TYPE_SUCCESS.equals(type)){
+            orderStatus = 3;
+        }else if(SysConfig.CANCEL_TYPE_FAIL.equals(type)){
+            orderStatus = 4;
+        }
+        this.body = new RequestBodyType(order.getSourceOrderId(), order.getId().toString(), order.getOrderItems().get(0).getCerts().size(), orderStatus);
 
         String xml = XMLParseUtil.convertToXml(this);
         String xmlBodyString = StringUtils.formatXml(XMLParseUtil.subBodyStringForXml(xml));

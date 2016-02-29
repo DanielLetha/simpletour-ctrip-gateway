@@ -5,6 +5,8 @@ package com.simpletour.gateway.ctrip.config;
  */
 public class SysConfig {
 
+    public static final Integer XIECHENG_SOURCE_ID = 71;
+
     public static final String ORDER_HANDLER = "orderhandler";
 
     public static final String TOURISM_HANDLER = "tourismHandler";
@@ -32,4 +34,9 @@ public class SysConfig {
     public static final String SIMPLETOUR_ACCOUNT_ID = "CF7C85B44C6B3A93";
 
     public static final String XIECHENG_VERSION = "2.0";
+
+    public static final String CANCEL_TYPE_SUCCESS = "cancel_type_success";
+
+    public static final String CANCEL_TYPE_FAIL = "cancel_type_fail";
+
 }

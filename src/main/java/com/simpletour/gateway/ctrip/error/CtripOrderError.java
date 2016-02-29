@@ -52,7 +52,7 @@ public enum CtripOrderError {
      **/
     ORDER_TRANSFER_TO_REQUEST_FAILED("9001", "构造请求异常"),
 
-    DELETE_FAILD("0005", "delete data failed");
+    OPERATE_EXCEPTION("10000", "parse exception");
 
     String errorCode;
     String errorMessage;

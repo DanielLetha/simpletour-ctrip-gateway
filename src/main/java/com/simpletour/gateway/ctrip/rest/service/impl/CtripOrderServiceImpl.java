@@ -1,25 +1,33 @@
 package com.simpletour.gateway.ctrip.rest.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.simpletour.biz.inventory.IStockBiz;
 import com.simpletour.biz.order.IOrderBiz;
+import com.simpletour.biz.order.bo.VerifyResponse;
+import com.simpletour.biz.order.error.TravelOrderBizError;
 import com.simpletour.biz.order.impl.OrderBizImpl;
+import com.simpletour.biz.order.util.XMLParseUtil;
 import com.simpletour.biz.product.IProductBiz;
 import com.simpletour.biz.resources.IResourcesBiz;
 import com.simpletour.common.core.dao.IBaseDao;
 import com.simpletour.common.core.dao.query.condition.AndConditionSet;
 import com.simpletour.common.core.dao.query.condition.Condition;
 import com.simpletour.common.core.exception.BaseSystemException;
+import com.simpletour.common.utils.JerseyUtil;
 import com.simpletour.domain.inventory.Stock;
 import com.simpletour.domain.order.Order;
 import com.simpletour.domain.order.OrderItem;
 import com.simpletour.domain.order.OrderStatus;
 import com.simpletour.domain.user.User;
+import com.simpletour.gateway.ctrip.config.SysConfig;
 import com.simpletour.gateway.ctrip.error.CtripOrderError;
 import com.simpletour.gateway.ctrip.rest.pojo.VerifyOrderRequest;
 import com.simpletour.gateway.ctrip.rest.pojo.VerifyOrderResponse;
 import com.simpletour.gateway.ctrip.rest.pojo.bo.CtripOrderBo;
+import com.simpletour.gateway.ctrip.rest.pojo.bo.CtripOrderCallBackBo;
 import com.simpletour.gateway.ctrip.rest.pojo.type.ResponseHeaderType;
 import com.simpletour.gateway.ctrip.rest.pojo.type.orderType.ResponseBodyType;
+import com.simpletour.gateway.ctrip.rest.service.CtripCallBackUrl;
 import com.simpletour.gateway.ctrip.rest.service.CtripOrderService;
 import com.simpletour.gateway.ctrip.util.DateUtil;
 import com.simpletour.service.order.IOrderService;
@@ -63,6 +71,9 @@ public class CtripOrderServiceImpl implements CtripOrderService {
     @Resource
     private IProductBiz iProductBiz;
 
+    @Resource
+    private CtripCallBackUrl ctripCallBackUrl;
+
     private void stockValidForOrder(Order order) {
         order.getOrderItems().stream().forEach(orderItem -> {
             if (orderItem.getTourism() != null && orderItem.getTourism().getId() != null) {
@@ -81,6 +92,14 @@ public class CtripOrderServiceImpl implements CtripOrderService {
     }
 
 
+    private VerifyOrderResponse validateOrderBasicInfo(Order order) {
+        if (order.getName() == null || order.getName().isEmpty())
+            return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.VALIDATE_FAILED.custom("联系人姓名不能为空")), null);
+        if (order.getMobile() == null || order.getMobile().isEmpty())
+            return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.VALIDATE_FAILED.custom("联系人手机号不能为空")), null);
+        return null;
+    }
+
     @Override
     public VerifyOrderResponse verifyOrder(VerifyOrderRequest verifyOrderRequest) {
 
@@ -88,6 +107,11 @@ public class CtripOrderServiceImpl implements CtripOrderService {
         CtripOrderBo ctripOrderBo = new CtripOrderBo(verifyOrderRequest.getHeader(), verifyOrderRequest.getBody());
         //传入order模块,进行业务单元处理
         Order order = ctripOrderBo.asOrder();
+        //验证订单基本信息
+        VerifyOrderResponse validate = this.validateOrderBasicInfo(order);
+        if (validate != null) {
+            return validate;
+        }
         try {
             orderBiz.validateOrder(order);
         } catch (BaseSystemException e) {
@@ -118,6 +142,11 @@ public class CtripOrderServiceImpl implements CtripOrderService {
         CtripOrderBo ctripOrderBo = new CtripOrderBo(verifyOrderRequest.getHeader(), verifyOrderRequest.getBody());
         //传入order模块,进行业务单元处理
         Order order = ctripOrderBo.asOrder();
+        //验证订单基本信息
+        VerifyOrderResponse validate = this.validateOrderBasicInfo(order);
+        if (validate != null) {
+            return validate;
+        }
 
         //验证传进来的otaOrderId是否存在并且是否是数据库已存在
         if (!(order.getSourceOrderId() == null || order.getSourceOrderId().isEmpty())) {
@@ -172,6 +201,7 @@ public class CtripOrderServiceImpl implements CtripOrderService {
     }
 
     @Override
+    @Transactional
     public VerifyOrderResponse cancelOrder(VerifyOrderRequest verifyOrderRequest) throws ParseException {
         //获取转化为实体后的数据,并对数据进行组装
         CtripOrderBo ctripOrderStatusBo = new CtripOrderBo(verifyOrderRequest.getHeader(), verifyOrderRequest.getBody());
@@ -196,13 +226,21 @@ public class CtripOrderServiceImpl implements CtripOrderService {
             if (orderStatusOriginal.getStatus() == OrderStatus.Status.CANCELED || orderStatusOriginal.getStatus() == OrderStatus.Status.REFUND) {
                 return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.OPERATION_SUCCESS), new ResponseBodyType(orderOptional.get().getOrderItems().get(0).getCerts().size(), "3", 8));
             }
+            //如果申请取消的时间在订单已经使用之后，认为订单不能取消，申请取消订单失败
+            if (DateUtil.convertStrToDate(DateUtil.convertDateToStr(new Date(), "yyyy-MM-dd"), "yyyy-MM-dd").after(orderOptional.get().getOrderItems().get(0).getDate())
+                    && orderStatusOriginal.getStatus() == OrderStatus.Status.MODIFY) {
+                //构造回调函数，用于告知携程取消审核失败
+                ctripCallBackUrl.getCancelOrderCallBack(JSON.toJSONString(new CtripOrderCallBackBo(orderOptional.get().getId(), SysConfig.CANCEL_TYPE_FAIL)));
+                return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.ORDER_HAS_BEEN_USED), new ResponseBodyType(0, "4", 8));
+            }
+            //如果申请取消的时间在订单使用之后，并且这个订单的状态为已完成
+            if (DateUtil.convertStrToDate(DateUtil.convertDateToStr(new Date(), "yyyy-MM-dd"), "yyyy-MM-dd").after(orderOptional.get().getOrderItems().get(0).getDate())
+                    && orderStatusOriginal.getStatus() == OrderStatus.Status.FINISHED) {
+                return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.ORDER_HAS_BEEN_USED), new ResponseBodyType(0, "4", 8));
+            }
             //订单取消申请中,订单状态为修改中
             if (orderStatusOriginal.getStatus() == OrderStatus.Status.MODIFY) {
-                return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.OPERATION_SUCCESS), new ResponseBodyType(orderOptional.get().getOrderItems().get(0).getCerts().size(), "0", 8));
-            }
-            //如果申请取消的时间在订单已经使用之后，认为订单不能取消，申请取消订单失败
-            if (DateUtil.convertStrToDate(DateUtil.convertDateToStr(new Date(), "yyyy-MM-dd"), "yyyy-MM-dd").after(orderOptional.get().getOrderItems().get(0).getDate())) {
-                return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.ORDER_HAS_BEEN_USED), new ResponseBodyType(0, "4", 8));
+                return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.OPERATION_SUCCESS), new ResponseBodyType(orderOptional.get().getOrderItems().get(0).getCerts().size(), "2", 8));
             }
         }
 
@@ -241,12 +279,17 @@ public class CtripOrderServiceImpl implements CtripOrderService {
             if (orderStatus.getStatus() == OrderStatus.Status.CANCELED || orderStatus.getStatus() == OrderStatus.Status.REFUND) {
                 return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.OPERATION_SUCCESS), new ResponseBodyType(order.getSourceOrderId(), order.getId().toString(), "3", order.getAmount(), orderOptional.get().getOrderItems().get(0).getCerts().size(), orderOptional.get().getOrderItems().get(0).getCerts().size(), 0));
             }
-            //订单取消申请中,订单状态位修改中
-            if (orderStatus.getStatus() == OrderStatus.Status.MODIFY) {
-                return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.OPERATION_SUCCESS), new ResponseBodyType(order.getSourceOrderId(), order.getId().toString(), "2", order.getAmount(), orderOptional.get().getOrderItems().get(0).getCerts().size(), orderOptional.get().getOrderItems().get(0).getCerts().size(), 0));
-            }
-            if (DateUtil.convertStrToDate(DateUtil.convertDateToStr(new Date(), "yyyy-MM-dd"), "yyyy-MM-dd").after(orderOptional.get().getOrderItems().get(0).getDate())) {
+            if (DateUtil.convertStrToDate(DateUtil.convertDateToStr(new Date(), "yyyy-MM-dd"), "yyyy-MM-dd").after(orderOptional.get().getOrderItems().get(0).getDate())
+                    && orderStatus.getStatus() == OrderStatus.Status.FINISHED) {
                 return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.OPERATION_SUCCESS), new ResponseBodyType(order.getSourceOrderId(), order.getId().toString(), "5", order.getAmount(), orderOptional.get().getOrderItems().get(0).getCerts().size(), 0, orderOptional.get().getOrderItems().get(0).getCerts().size()));
+            }
+            if (DateUtil.convertStrToDate(DateUtil.convertDateToStr(new Date(), "yyyy-MM-dd"), "yyyy-MM-dd").after(orderOptional.get().getOrderItems().get(0).getDate())
+                    && orderStatus.getStatus() == OrderStatus.Status.MODIFY) {
+                return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.OPERATION_SUCCESS), new ResponseBodyType(order.getSourceOrderId(), order.getId().toString(), "4", order.getAmount(), orderOptional.get().getOrderItems().get(0).getCerts().size(), 0, orderOptional.get().getOrderItems().get(0).getCerts().size()));
+            }
+            //订单取消申请中,订单状态位修改中,订单还未过期
+            if (orderStatus.getStatus() == OrderStatus.Status.MODIFY) {
+                return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.OPERATION_SUCCESS), new ResponseBodyType(order.getSourceOrderId(), order.getId().toString(), "2", order.getAmount(), orderOptional.get().getOrderItems().get(0).getCerts().size(), 0, 0));
             }
             return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.OPERATION_SUCCESS), new ResponseBodyType(order.getSourceOrderId(), order.getId().toString(), "1", order.getAmount(), orderOptional.get().getOrderItems().get(0).getCerts().size(), 0, 0));
         } else {
