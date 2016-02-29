@@ -34,6 +34,7 @@ public class CtripOrderBo {
     CtripOrderBo() {
     }
 
+
     public CtripOrderBo(RequestHeaderType requestHeaderType, RequestBodyType requestBodyType) {
         this.requestHeaderType = requestHeaderType;
         this.requestBodyType = requestBodyType;

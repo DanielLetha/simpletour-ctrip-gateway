@@ -29,6 +29,7 @@ public class RequestBodyType {
     private String useEndDate;
     private Integer cancelCount;
     private Integer orderStatus;
+    private Integer useCount;
     private ExtendInfoType extendInfo;
 
     public RequestBodyType() {
@@ -39,6 +40,15 @@ public class RequestBodyType {
         this.vendorOrderId = vendorOrderId;
         this.cancelCount = cancelCount;
         this.orderStatus = orderStatus;
+    }
+
+    public RequestBodyType(String otaOrderId, String vendorOrderId, String useDate, Integer count, Integer useCount, Integer cancelCount) {
+        this.otaOrderId = otaOrderId;
+        this.vendorOrderId = vendorOrderId;
+        this.useDate = useDate;
+        this.count = count;
+        this.useCount = useCount;
+        this.cancelCount = cancelCount;
     }
 
     public String getOtaOrderId() {
@@ -169,5 +179,13 @@ public class RequestBodyType {
 
     public void setOrderStatus(Integer orderStatus) {
         this.orderStatus = orderStatus;
+    }
+
+    public Integer getUseCount() {
+        return useCount;
+    }
+
+    public void setUseCount(Integer useCount) {
+        this.useCount = useCount;
     }
 }

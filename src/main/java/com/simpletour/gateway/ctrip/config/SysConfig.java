@@ -26,6 +26,9 @@ public class SysConfig {
     public static final String QUERY_TOURISM_METHOD = "queryTourism";
 
     public static final String NOTICE_ORDER_CANCEL = "NoticeOrderCancel";
+
+    public static final String NOTICE_ORDER_CONSUMED = "NoticeOrderConsumed";
+
     //0代表门票---产品
     public static final String PRODUCT_TYPE = "1";
     //1代表巴士+门票---行程

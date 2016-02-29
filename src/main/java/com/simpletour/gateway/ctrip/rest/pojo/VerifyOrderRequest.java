@@ -23,8 +23,7 @@ public class VerifyOrderRequest extends VerifyRequest {
 
     private RequestBodyType body;
 
-    public RequestBodyType getBody() {
-        return body;
+    public VerifyOrderRequest() {
     }
 
     public void setBody(RequestBodyType body) {
@@ -32,23 +31,39 @@ public class VerifyOrderRequest extends VerifyRequest {
     }
 
     /**
-     * 构造请求用于请求携程接口
+     * 构造请求用于请求携程接口,取消订单回调
      *
      * @param order
      * @param signKey
      * @return
      * @throws UnsupportedEncodingException
      */
-    public VerifyOrderRequest buildRequest(Order order, String signKey,String type ) throws UnsupportedEncodingException {
+    public VerifyOrderRequest buildRequest(Order order, String signKey, String type) throws UnsupportedEncodingException {
         this.header = new RequestHeaderType(SysConfig.SIMPLETOUR_ACCOUNT_ID, SysConfig.NOTICE_ORDER_CANCEL, DateUtil.convertDateToStr(new Date(), "yyyy-MM-dd hh:mm:ss"), SysConfig.XIECHENG_VERSION);
         Integer orderStatus = 0;
-        if(SysConfig.CANCEL_TYPE_SUCCESS.equals(type)){
+        if (SysConfig.CANCEL_TYPE_SUCCESS.equals(type)) {
             orderStatus = 3;
-        }else if(SysConfig.CANCEL_TYPE_FAIL.equals(type)){
+        } else if (SysConfig.CANCEL_TYPE_FAIL.equals(type)) {
             orderStatus = 4;
         }
         this.body = new RequestBodyType(order.getSourceOrderId(), order.getId().toString(), order.getOrderItems().get(0).getCerts().size(), orderStatus);
+        return buildStringXml(signKey);
+    }
 
+    /**
+     * 构造请求用于请求携程接口,消费通知回调
+     *
+     * @param requestBodyType
+     * @param signKey
+     * @return
+     */
+    public VerifyOrderRequest buildRequestForConsume(RequestBodyType requestBodyType, String signKey) throws UnsupportedEncodingException {
+        this.header = new RequestHeaderType(SysConfig.SIMPLETOUR_ACCOUNT_ID, SysConfig.NOTICE_ORDER_CONSUMED, DateUtil.convertDateToStr(new Date(), "yyyy-MM-dd hh:mm:ss"), SysConfig.XIECHENG_VERSION);
+        this.body = requestBodyType;
+        return buildStringXml(signKey);
+    }
+
+    private VerifyOrderRequest buildStringXml(String signKey) throws UnsupportedEncodingException {
         String xml = XMLParseUtil.convertToXml(this);
         String xmlBodyString = StringUtils.formatXml(XMLParseUtil.subBodyStringForXml(xml));
 
@@ -62,7 +77,6 @@ public class VerifyOrderRequest extends VerifyRequest {
         buffer.append(signKey);
         String sign = MD5.getMD5String(buffer.toString().getBytes()).toLowerCase();
         this.header.setSign(sign);
-
         return this;
     }
 

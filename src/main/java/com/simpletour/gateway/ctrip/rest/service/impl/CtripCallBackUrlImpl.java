@@ -6,8 +6,10 @@ import com.simpletour.domain.order.Order;
 import com.simpletour.gateway.ctrip.error.CtripOrderError;
 import com.simpletour.gateway.ctrip.rest.pojo.VerifyOrderRequest;
 import com.simpletour.gateway.ctrip.rest.pojo.VerifyResponse;
+import com.simpletour.gateway.ctrip.rest.pojo.bo.CtripOrderBo;
 import com.simpletour.gateway.ctrip.rest.pojo.bo.CtripOrderCallBackBo;
 import com.simpletour.gateway.ctrip.rest.pojo.type.ResponseHeaderType;
+import com.simpletour.gateway.ctrip.rest.pojo.type.orderType.RequestBodyType;
 import com.simpletour.gateway.ctrip.rest.service.CtripCallBackUrl;
 import com.simpletour.gateway.ctrip.util.StringUtils;
 import com.simpletour.gateway.ctrip.util.XMLParseUtil;
@@ -34,6 +36,8 @@ public class CtripCallBackUrlImpl implements CtripCallBackUrl {
     @Value("${xiecheng.callback.cancelOrder}")
     private String url;
 
+    @Value("${xiecheng.callback.consumeOrder}")
+    private String consumeUrl;
 
     @Override
     public VerifyResponse getCancelOrderCallBack(String request) {
@@ -67,9 +71,20 @@ public class CtripCallBackUrlImpl implements CtripCallBackUrl {
 
         //调用请求
         String response = JerseyUtil.getResultForUrl(url, StringUtils.formatXml(XMLParseUtil.convertToXml(verifyOrderRequest)), "xml");
-        if (response == null || request.isEmpty()) {
+        if (response == null || response.isEmpty()) {
             return new VerifyResponse(new ResponseHeaderType(CtripOrderError.ORDER_CALL_BACK_NULL));
         }
         return XMLParseUtil.convertToJavaBean(response, VerifyResponse.class);
+    }
+
+    @Override
+    public VerifyResponse getConsumeOrderCallBack(RequestBodyType requestBodyType) throws UnsupportedEncodingException {
+        VerifyOrderRequest verifyOrderRequest = new VerifyOrderRequest().buildRequestForConsume(requestBodyType, signKey);
+        //调用请求
+        String response = JerseyUtil.getResultForUrl(consumeUrl, StringUtils.formatXml(XMLParseUtil.convertToXml(verifyOrderRequest)), "xml");
+        if (response == null || response.isEmpty()) {
+            return new VerifyResponse(new ResponseHeaderType(CtripOrderError.ORDER_CALL_BACK_NULL));
+        }
+        return null;
     }
 }
