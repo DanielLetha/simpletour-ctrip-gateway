@@ -69,6 +69,22 @@ public class DateUtil {
         return hour + ":" + second;
     }
 
+    /**
+     * 获取前天
+     *
+     * @return
+     */
+    public static Date getDayBeforeYesterDay() {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, -2);
+        try {
+            return convertStrToDate(convertDateToStr(cal.getTime(), "yyyy-MM-dd"), "yyyy-MM-dd");
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public static void main(String[] args) throws ParseException {
 //        try {
 //            Date date = convertStrToDate("2016-01-06", "yyyy-MM-dd");
@@ -78,10 +94,11 @@ public class DateUtil {
 //        }
 
 //        System.out.println(convertDateToStr(new Date(), "yyyy-MM-dd"));
-        Long time = 178260L;
-        System.out.println(convertLongToTime(time));
-        Date date = new Date();
-        String dateFormat = convertDateToStr(date, "yyyy-MM-dd");
-        System.out.println(convertStrToDate(dateFormat, "yyyy-MM-dd"));
+//        Long time = 178260L;
+//        System.out.println(convertLongToTime(time));
+//        Date date = new Date();
+//        String dateFormat = convertDateToStr(date, "yyyy-MM-dd");
+//        System.out.println(convertStrToDate(dateFormat, "yyyy-MM-dd"));
+        System.out.println(getDayBeforeYesterDay());
     }
 }

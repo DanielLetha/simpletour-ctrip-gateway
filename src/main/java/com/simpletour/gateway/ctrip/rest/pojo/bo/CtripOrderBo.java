@@ -1,5 +1,6 @@
 package com.simpletour.gateway.ctrip.rest.pojo.bo;
 
+import com.simpletour.common.core.exception.BaseSystemException;
 import com.simpletour.domain.order.*;
 import com.simpletour.domain.product.Product;
 import com.simpletour.domain.product.Tourism;
@@ -77,20 +78,35 @@ public class CtripOrderBo {
         order.setTenantId(1L);
         //设置source
         Source source = new Source();
-        source.setId(Long.parseLong(this.requestHeaderType.getAccountId()));
+        try {
+            source.setId(Long.parseLong(this.requestHeaderType.getAccountId()));
+        } catch (NumberFormatException e) {
+            BaseSystemException baseSystemException = new BaseSystemException("渠道id错误");
+            throw baseSystemException;
+        }
         order.setSource(source);
         //设置orderItem
         OrderItem orderItem = new OrderItem();
         if (this.requestBodyType.getExtendInfo() != null) {
             if (SysConfig.PRODUCT_TYPE.equals(this.requestBodyType.getExtendInfo().getProductType())) {
                 Product product = new Product();
-                product.setId(Long.parseLong(this.requestBodyType.getProductId()));
+                try {
+                    product.setId(Long.parseLong(this.requestBodyType.getProductId()));
+                } catch (NumberFormatException e) {
+                    BaseSystemException baseSystemException = new BaseSystemException("产品id错误");
+                    throw baseSystemException;
+                }
                 product.setOnline(true);
                 orderItem.setProduct(product);
                 orderItem.setType(OrderItem.Type.product);
             } else if (SysConfig.TOURISM_TYPE.equals(this.requestBodyType.getExtendInfo().getProductType())) {
                 Tourism tourism = new Tourism();
-                tourism.setId(Long.parseLong(this.requestBodyType.getProductId()));
+                try {
+                    tourism.setId(Long.parseLong(this.requestBodyType.getProductId()));
+                } catch (NumberFormatException e) {
+                    BaseSystemException baseSystemException = new BaseSystemException("产品id错误");
+                    throw baseSystemException;
+                }
                 tourism.setOnline(true);
                 orderItem.setTourism(tourism);
                 orderItem.setType(OrderItem.Type.tourism);
@@ -103,7 +119,8 @@ public class CtripOrderBo {
         try {
             orderItem.setDate(DateUtil.convertStrToDate(this.requestBodyType.getUseDate(), "yyyy-MM-dd"));
         } catch (ParseException e) {
-            e.printStackTrace();
+            BaseSystemException baseSystemException = new BaseSystemException("产品使用日期错误");
+            throw baseSystemException;
         }
         List<Cert> certList = new ArrayList<>();
         if (!(this.requestBodyType.getPassengerInfos() == null || this.requestBodyType.getPassengerInfos().isEmpty())) {

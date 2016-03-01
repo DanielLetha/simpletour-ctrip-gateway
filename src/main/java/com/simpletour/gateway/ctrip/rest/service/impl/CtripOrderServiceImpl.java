@@ -106,7 +106,12 @@ public class CtripOrderServiceImpl implements CtripOrderService {
         //获取转化为实体后的数据,并对数据进行组装
         CtripOrderBo ctripOrderBo = new CtripOrderBo(verifyOrderRequest.getHeader(), verifyOrderRequest.getBody());
         //传入order模块,进行业务单元处理
-        Order order = ctripOrderBo.asOrder();
+        Order order = null;
+        try {
+            order = ctripOrderBo.asOrder();
+        } catch (BaseSystemException e) {
+            return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.DATA_PARSE_EXCEPTION.custom(e.getExtMessage())), null);
+        }
         //验证订单基本信息
         VerifyOrderResponse validate = this.validateOrderBasicInfo(order);
         if (validate != null) {
@@ -141,7 +146,12 @@ public class CtripOrderServiceImpl implements CtripOrderService {
         //获取转化为实体后的数据,并对数据进行组装
         CtripOrderBo ctripOrderBo = new CtripOrderBo(verifyOrderRequest.getHeader(), verifyOrderRequest.getBody());
         //传入order模块,进行业务单元处理
-        Order order = ctripOrderBo.asOrder();
+        Order order = null;
+        try {
+            order = ctripOrderBo.asOrder();
+        } catch (BaseSystemException e) {
+            return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.DATA_PARSE_EXCEPTION.custom(e.getExtMessage())), null);
+        }
         //验证订单基本信息
         VerifyOrderResponse validate = this.validateOrderBasicInfo(order);
         if (validate != null) {
@@ -262,7 +272,12 @@ public class CtripOrderServiceImpl implements CtripOrderService {
         //获取转化为实体后的数据,并对数据进行组装
         CtripOrderBo ctripOrderBo = new CtripOrderBo(verifyOrderRequest.getHeader(), verifyOrderRequest.getBody());
         //传入order模块,进行业务单元处理
-        Order order = ctripOrderBo.asOrder();
+        Order order = null;
+        try {
+            order = ctripOrderBo.asOrder();
+        } catch (BaseSystemException e) {
+            return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.DATA_PARSE_EXCEPTION.custom(e.getExtMessage())), null);
+        }
 
         Optional<Order> orderOptional;
         try {
@@ -279,6 +294,7 @@ public class CtripOrderServiceImpl implements CtripOrderService {
             if (orderStatus.getStatus() == OrderStatus.Status.CANCELED || orderStatus.getStatus() == OrderStatus.Status.REFUND) {
                 return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.OPERATION_SUCCESS), new ResponseBodyType(order.getSourceOrderId(), order.getId().toString(), "3", order.getAmount(), orderOptional.get().getOrderItems().get(0).getCerts().size(), orderOptional.get().getOrderItems().get(0).getCerts().size(), 0));
             }
+            //订单过期的情况
             if (DateUtil.convertStrToDate(DateUtil.convertDateToStr(new Date(), "yyyy-MM-dd"), "yyyy-MM-dd").after(orderOptional.get().getOrderItems().get(0).getDate())
                     && orderStatus.getStatus() == OrderStatus.Status.FINISHED) {
                 return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.OPERATION_SUCCESS), new ResponseBodyType(order.getSourceOrderId(), order.getId().toString(), "5", order.getAmount(), orderOptional.get().getOrderItems().get(0).getCerts().size(), 0, orderOptional.get().getOrderItems().get(0).getCerts().size()));
@@ -302,7 +318,12 @@ public class CtripOrderServiceImpl implements CtripOrderService {
         //获取转化为实体后的数据,并对数据进行组装
         CtripOrderBo ctripOrderBo = new CtripOrderBo(verifyOrderRequest.getHeader(), verifyOrderRequest.getBody());
         //传入order模块,进行业务单元处理
-        Order order = ctripOrderBo.asOrder();
+        Order order = null;
+        try {
+            order = ctripOrderBo.asOrder();
+        } catch (BaseSystemException e) {
+            return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.DATA_PARSE_EXCEPTION.custom(e.getExtMessage())), null);
+        }
 
         //查询一次订单的基本信息,用于封装短信服务
         Optional<Order> orderOptional;

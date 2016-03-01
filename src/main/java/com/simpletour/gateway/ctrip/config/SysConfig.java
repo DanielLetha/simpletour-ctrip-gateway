@@ -5,7 +5,9 @@ package com.simpletour.gateway.ctrip.config;
  */
 public class SysConfig {
 
-    public static final Integer XIECHENG_SOURCE_ID = 71;
+    public static final Integer XIECHENG_MP_SOURCE_ID = 71;
+
+    public static final Integer XIECHENG_CP_SOURCE_ID = 113;
 
     public static final String ORDER_HANDLER = "orderhandler";
 
@@ -29,9 +31,9 @@ public class SysConfig {
 
     public static final String NOTICE_ORDER_CONSUMED = "NoticeOrderConsumed";
 
-    //0代表门票---产品
+    //1代表门票---产品
     public static final String PRODUCT_TYPE = "1";
-    //1代表巴士+门票---行程
+    //0代表巴士+门票---行程
     public static final String TOURISM_TYPE = "0";
     //携程提供简途的accountId
     public static final String SIMPLETOUR_ACCOUNT_ID = "CF7C85B44C6B3A93";

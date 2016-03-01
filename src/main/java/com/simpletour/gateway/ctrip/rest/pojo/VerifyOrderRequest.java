@@ -30,6 +30,10 @@ public class VerifyOrderRequest extends VerifyRequest {
         this.body = body;
     }
 
+    public RequestBodyType getBody() {
+        return body;
+    }
+
     /**
      * 构造请求用于请求携程接口,取消订单回调
      *
