@@ -17,7 +17,7 @@
         <spring.version>4.2.2.RELEASE</spring.version>
         <simpletour.product.version>1.0</simpletour.product.version>
         <simpletour.resources.version>1.0</simpletour.resources.version>
-        <simpletour.order.version>1.1</simpletour.order.version>
+        <simpletour.order.version>1.0-OTASP</simpletour.order.version>
         <simpletour.sms.version>1.0</simpletour.sms.version>
         <simpletour.user.version>1.0</simpletour.user.version>
         <simpletour.transport.version>1.0</simpletour.transport.version>
