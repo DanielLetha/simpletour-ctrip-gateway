@@ -6,21 +6,21 @@
 
     <groupId>com.simpletour</groupId>
     <artifactId>simpletour-ctrip-gateway</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <packaging>war</packaging>
     <name>Simpletour-Ctrip-Gateway-Server</name>
 
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <simpletour.common.version>1.1-SNAPSHOT</simpletour.common.version>
+        <simpletour.common.version>1.1</simpletour.common.version>
         <spring.version>4.2.2.RELEASE</spring.version>
-        <simpletour.product.version>1.0-SNAPSHOT</simpletour.product.version>
-        <simpletour.resources.version>1.0-SNAPSHOT</simpletour.resources.version>
-        <simpletour.order.version>1.0-SNAPSHOT</simpletour.order.version>
-        <simpletour.sms.version>1.0-SNAPSHOT</simpletour.sms.version>
-        <simpletour.user.version>1.0-SNAPSHOT</simpletour.user.version>
-        <simpletour.transport.version>1.0-SNAPSHOT</simpletour.transport.version>
+        <simpletour.product.version>1.0</simpletour.product.version>
+        <simpletour.resources.version>1.0</simpletour.resources.version>
+        <simpletour.order.version>1.0</simpletour.order.version>
+        <simpletour.sms.version>1.0</simpletour.sms.version>
+        <simpletour.user.version>1.0</simpletour.user.version>
+        <simpletour.transport.version>1.0</simpletour.transport.version>
     </properties>
 
     <dependencies>
