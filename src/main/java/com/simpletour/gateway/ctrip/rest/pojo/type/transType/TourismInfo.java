@@ -2,6 +2,8 @@ package com.simpletour.gateway.ctrip.rest.pojo.type.transType;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import java.math.BigDecimal;
+
 /**
  * Created by Mario on 2016/1/12.
  */
@@ -31,10 +33,23 @@ public class TourismInfo {
      * 行程名称
      */
     private String name;
+    /**
+     * 库存数量
+     */
+    private Integer stock;
+    /**
+     * 库存价格
+     */
+    private BigDecimal price;
+
+
 
     /**
      * constructor
      */
+    public TourismInfo() {
+    }
+
     public TourismInfo(Long tourismId, String arrive, String depart, String arriveTime, String departTime, String name) {
         this.tourismId = tourismId;
         this.arrive = arrive;
@@ -44,6 +59,16 @@ public class TourismInfo {
         this.name = name;
     }
 
+    public TourismInfo(Long tourismId, String arrive, String depart, String arriveTime, String departTime, String name, Integer stock, BigDecimal price) {
+        this.tourismId = tourismId;
+        this.arrive = arrive;
+        this.depart = depart;
+        this.arriveTime = arriveTime;
+        this.departTime = departTime;
+        this.name = name;
+        this.stock = stock;
+        this.price = price;
+    }
 
     /**
      * setter & getter
@@ -94,5 +119,21 @@ public class TourismInfo {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Integer getStock() {
+        return stock;
+    }
+
+    public void setStock(Integer stock) {
+        this.stock = stock;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 }

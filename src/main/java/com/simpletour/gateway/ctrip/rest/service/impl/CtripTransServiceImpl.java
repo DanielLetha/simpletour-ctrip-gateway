@@ -1,6 +1,8 @@
 package com.simpletour.gateway.ctrip.rest.service.impl;
 
+import com.simpletour.biz.inventory.IStockBiz;
 import com.simpletour.common.core.dao.query.condition.AndConditionSet;
+import com.simpletour.domain.inventory.Stock;
 import com.simpletour.domain.product.Tourism;
 import com.simpletour.gateway.ctrip.error.CtripTransError;
 import com.simpletour.gateway.ctrip.rest.pojo.VerifyTransRequest;
@@ -14,7 +16,10 @@ import com.simpletour.service.product.IProductService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -25,6 +30,9 @@ public class CtripTransServiceImpl implements CtripTransService {
 
     @Resource
     private IProductService productService;
+
+    @Resource
+    private IStockBiz stockBiz;
 
     @Override
     public VerifyTransResponse queryTourism(VerifyTransRequest verifyTransRequest) {
@@ -55,7 +63,14 @@ public class CtripTransServiceImpl implements CtripTransService {
             return new VerifyTransResponse(new ResponseHeaderType(CtripTransError.BUS_NO_FIND_FAILD), null);
         }
         //转化数据
-        List<TourismInfo> tourismInfos = tourisms.stream().map(tourism1 -> new TourismInfo(tourism1.getId(), tourism1.getArrive(), tourism1.getDepart(), tourism1.getArriveTime(), tourism1.getDepartTime(), tourism1.getName())).collect(Collectors.toList());
+        List<TourismInfo> tourismInfos = tourisms.stream().map(tourism1 -> {
+            //获取库存以及价格
+            Optional<Stock> stockOptional = stockBiz.getStock(tourism1, new Date(), true);
+            if (!stockOptional.isPresent()) {
+                return new TourismInfo(tourism1.getId(), tourism1.getArrive(), tourism1.getDepart(), tourism1.getArriveTime(), tourism1.getDepartTime(), tourism1.getName(), 0, BigDecimal.ZERO);
+            }
+            return new TourismInfo(tourism1.getId(), tourism1.getArrive(), tourism1.getDepart(), tourism1.getArriveTime(), tourism1.getDepartTime(), tourism1.getName(), stockOptional.get().getAvailableQuantity(), stockOptional.get().getPrice());
+        }).collect(Collectors.toList());
         return new VerifyTransResponse(new ResponseHeaderType(CtripTransError.OPERATION_SUCCESS), new ResponseBodyTypeForTrans(tourismInfos.size(), tourismInfos));
     }
 }

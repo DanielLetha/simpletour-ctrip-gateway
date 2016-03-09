@@ -169,7 +169,7 @@ public class CtripResourceTest extends BaseRESTfulService {
         String xmlBodyString = StringUtils.formatXml(XMLParseUtil.subBodyStringForXml(xml));
 
         //3.编码sign
-        String xmlBase64 =org.bouncycastle.util.encoders.Base64.toBase64String(xmlBodyString.getBytes("UTF-8"));
+        String xmlBase64 = org.bouncycastle.util.encoders.Base64.toBase64String(xmlBodyString.getBytes("UTF-8"));
         StringBuffer buffer = new StringBuffer();
         buffer.append(headerType.getAccountId());
         buffer.append(headerType.getServiceName());
@@ -192,12 +192,12 @@ public class CtripResourceTest extends BaseRESTfulService {
         //构造数据
         //1.构造body信息
         RequestBodyTypeForTrans bodyType = new RequestBodyTypeForTrans();
-        bodyType.setDepart("CZS");
-        bodyType.setArrive("CD");
+        bodyType.setDepart("成都");
+//        bodyType.setArrive("CD");
 
         //2.构造header信息
         RequestHeaderType headerType = new RequestHeaderType();
-        headerType.setAccountId("1");
+        headerType.setAccountId(SysConfig.XIECHENG_CP_SOURCE_ID + "");
         headerType.setServiceName(serviceName);
         headerType.setRequestTime("2015-10-19 16:05:31");
         headerType.setVersion("2.0");
