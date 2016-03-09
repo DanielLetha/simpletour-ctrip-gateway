@@ -6,7 +6,7 @@
 
     <groupId>com.simpletour</groupId>
     <artifactId>simpletour-ctrip-gateway</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <packaging>war</packaging>
     <name>Simpletour-Ctrip-Gateway-Server</name>
 
