@@ -2,6 +2,8 @@ package com.simpletour.gateway.ctrip.rest.pojo.type.transType;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import java.util.List;
 
 /**
@@ -35,6 +37,9 @@ public class ResponseBodyTypeForTrans {
         this.count = count;
     }
 
+
+    @XmlElementWrapper(name = "tourismInfos")
+    @XmlElement(name = "tourismInfo",required = true)
     public List<TourismInfo> getTourismInfos() {
         return tourismInfos;
     }
