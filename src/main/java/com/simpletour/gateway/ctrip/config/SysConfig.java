@@ -36,7 +36,7 @@ public class SysConfig {
     //0代表巴士+门票---行程
     public static final String TOURISM_TYPE = "0";
     //携程提供简途的accountId
-    public static final String SIMPLETOUR_ACCOUNT_ID = "CF7C85B44C6B3A93";
+    public static final String SIMPLETOUR_ACCOUNT_ID = "37FFDE5006A1FD22";
 
     public static final String XIECHENG_VERSION = "2.0";
 
