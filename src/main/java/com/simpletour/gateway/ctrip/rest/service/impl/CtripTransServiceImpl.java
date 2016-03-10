@@ -55,6 +55,8 @@ public class CtripTransServiceImpl implements CtripTransService {
                 andConditionSet.addCondition("arrive", tourism.getArrive());
             }
             andConditionSet.addCondition("online", true);
+            andConditionSet.addCondition("shuttle", false);
+            andConditionSet.addCondition("productNum",0);
             tourisms = productService.getTourismByCondition(andConditionSet);
         } catch (IllegalArgumentException e) {
             return new VerifyTransResponse(new ResponseHeaderType(CtripTransError.BUS_NO_FIND_FAILD), null);

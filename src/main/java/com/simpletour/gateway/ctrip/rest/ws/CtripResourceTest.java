@@ -118,7 +118,7 @@ public class CtripResourceTest extends BaseRESTfulService {
 
         //2.构造header信息
         RequestHeaderType headerType = new RequestHeaderType();
-        headerType.setAccountId("1");
+        headerType.setAccountId("71");
         headerType.setServiceName(serviceName);
         headerType.setRequestTime("2015-10-19 16:05:31");
         headerType.setVersion("2.0");
@@ -155,7 +155,7 @@ public class CtripResourceTest extends BaseRESTfulService {
 
         //2.构造header信息
         RequestHeaderType headerType = new RequestHeaderType();
-        headerType.setAccountId("1");
+        headerType.setAccountId("71");
         headerType.setServiceName(serviceName);
         headerType.setRequestTime("2015-10-19 16:05:31");
         headerType.setVersion("2.0");
