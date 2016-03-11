@@ -42,7 +42,10 @@ public class TourismInfo {
      */
     private BigDecimal price;
 
-
+    /**
+     * 行程时常
+     */
+    private Integer days;
 
     /**
      * constructor
@@ -59,13 +62,14 @@ public class TourismInfo {
         this.name = name;
     }
 
-    public TourismInfo(Long tourismId, String arrive, String depart, String arriveTime, String departTime, String name, Integer stock, BigDecimal price) {
+    public TourismInfo(Long tourismId, String arrive, String depart, String arriveTime, String departTime, String name, Integer days,Integer stock, BigDecimal price) {
         this.tourismId = tourismId;
         this.arrive = arrive;
         this.depart = depart;
         this.arriveTime = arriveTime;
         this.departTime = departTime;
         this.name = name;
+        this.days = days;
         this.stock = stock;
         this.price = price;
     }
@@ -135,5 +139,13 @@ public class TourismInfo {
 
     public void setPrice(BigDecimal price) {
         this.price = price;
+    }
+
+    public Integer getDays() {
+        return days;
+    }
+
+    public void setDays(Integer days) {
+        this.days = days;
     }
 }

@@ -26,6 +26,7 @@ import javax.ws.rs.core.MediaType;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -194,6 +195,8 @@ public class CtripResourceTest extends BaseRESTfulService {
         RequestBodyTypeForTrans bodyType = new RequestBodyTypeForTrans();
         bodyType.setDepart("成都");
 //        bodyType.setArrive("CD");
+
+        bodyType.setDate(new Date());
 
         //2.构造header信息
         RequestHeaderType headerType = new RequestHeaderType();
