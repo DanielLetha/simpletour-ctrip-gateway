@@ -157,6 +157,12 @@ public class CtripOrderServiceImpl implements CtripOrderService {
         if (validate != null) {
             return validate;
         }
+        //验证订单信息,防止库存溢出
+        try {
+            orderBiz.validateOrder(order);
+        } catch (BaseSystemException e) {
+            return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.VALIDATE_FAILED.custom(e.getError().getErrorMessage())), null);
+        }
 
         //验证传进来的otaOrderId是否存在并且是否是数据库已存在
         if (!(order.getSourceOrderId() == null || order.getSourceOrderId().isEmpty())) {
