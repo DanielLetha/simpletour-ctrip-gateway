@@ -38,25 +38,25 @@ public class CtripTransServiceImpl implements CtripTransService {
     public VerifyTransResponse queryTourism(VerifyTransRequest verifyTransRequest) {
 
         //获取转化为实体后的数据,并对数据进行组装
-        CtripTransBo ctripTransBo = new CtripTransBo(verifyTransRequest.getHeader(), verifyTransRequest.getBody());
+//        CtripTransBo ctripTransBo = new CtripTransBo(verifyTransRequest.getHeader(), verifyTransRequest.getBody());
         //传入tourism模块进行业务单元处理
-        Tourism tourism = ctripTransBo.asTourism();
+//        Tourism tourism = ctripTransBo.asTourism();
 
         List<Tourism> tourisms;
         try {
             AndConditionSet andConditionSet = new AndConditionSet();
-            if (tourism.getId() != null) {
-                andConditionSet.addCondition("id", tourism.getId());
+            if (verifyTransRequest.getBody().getTourismId() != null) {
+                andConditionSet.addCondition("id", verifyTransRequest.getBody().getTourismId());
             }
-            if (!(tourism.getDepart() == null || tourism.getDepart().isEmpty())) {
-                andConditionSet.addCondition("depart", tourism.getDepart());
+            if (!(verifyTransRequest.getBody().getDepart() == null || verifyTransRequest.getBody().getDepart().isEmpty())) {
+                andConditionSet.addCondition("depart", verifyTransRequest.getBody().getDepart());
             }
-            if (!(tourism.getArrive() == null || tourism.getArrive().isEmpty())) {
-                andConditionSet.addCondition("arrive", tourism.getArrive());
+            if (!(verifyTransRequest.getBody().getArrive() == null || verifyTransRequest.getBody().getArrive().isEmpty())) {
+                andConditionSet.addCondition("arrive",verifyTransRequest.getBody().getArrive());
             }
             andConditionSet.addCondition("online", true);
             andConditionSet.addCondition("shuttle", false);
-            andConditionSet.addCondition("productNum",0);
+            andConditionSet.addCondition("productNum", 0);
             tourisms = productService.getTourismByCondition(andConditionSet);
         } catch (IllegalArgumentException e) {
             return new VerifyTransResponse(new ResponseHeaderType(CtripTransError.BUS_NO_FIND_FAILD), null);
@@ -69,9 +69,9 @@ public class CtripTransServiceImpl implements CtripTransService {
             //获取库存以及价格
             Optional<Stock> stockOptional = stockBiz.getStock(tourism1, new Date(), true);
             if (!stockOptional.isPresent()) {
-                return new TourismInfo(tourism1.getId(), tourism1.getArrive(), tourism1.getDepart(), tourism1.getArriveTime(), tourism1.getDepartTime(), tourism1.getName(), 0, BigDecimal.ZERO);
+                return new TourismInfo(tourism1.getId(), tourism1.getArrive(), tourism1.getDepart(), tourism1.getArriveTime(), tourism1.getDepartTime(), tourism1.getName(), tourism1.getDays(), 0, BigDecimal.ZERO);
             }
-            return new TourismInfo(tourism1.getId(), tourism1.getArrive(), tourism1.getDepart(), tourism1.getArriveTime(), tourism1.getDepartTime(), tourism1.getName(), stockOptional.get().getAvailableQuantity(), stockOptional.get().getPrice());
+            return new TourismInfo(tourism1.getId(), tourism1.getArrive(), tourism1.getDepart(), tourism1.getArriveTime(), tourism1.getDepartTime(), tourism1.getName(), tourism1.getDays(), stockOptional.get().getAvailableQuantity(), stockOptional.get().getPrice());
         }).collect(Collectors.toList());
         return new VerifyTransResponse(new ResponseHeaderType(CtripTransError.OPERATION_SUCCESS), new ResponseBodyTypeForTrans(tourismInfos.size(), tourismInfos));
     }
