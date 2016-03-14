@@ -1,6 +1,7 @@
 package com.simpletour.gateway.ctrip.rest.pojo.type.transType;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.simpletour.gateway.ctrip.util.DateUtil;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
@@ -28,7 +29,7 @@ public class RequestBodyTypeForTrans {
     /**
      * 指定哪一天:默认是今天
      */
-    private Date date = new Date();
+    private String date;
 
     public String getDepart() {
         return depart;
@@ -54,11 +55,11 @@ public class RequestBodyTypeForTrans {
         this.tourismId = tourismId;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 }
