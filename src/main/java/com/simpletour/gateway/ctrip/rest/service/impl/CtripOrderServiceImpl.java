@@ -176,6 +176,8 @@ public class CtripOrderServiceImpl implements CtripOrderService {
                 }
                 return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.OPERATION_SUCCESS.custom("该订单已经存在")), new ResponseBodyType(getStock(orders.get(0)).get().getAvailableQuantity(), order.getSourceOrderId(), orders.get(0).getId().toString(), ResponseBodyType.SmsCodeType.VENDOR.getVal(), ""));
             }
+        } else {
+            return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.ORDER_SOURCE_ID_NULL), new ResponseBodyType(0));
         }
         //验证传进来的用户是否存在,如果有用户则通过,没有则创建用户
         User userOrginal = userService.getAvailableUserByMobile(order.getMobile());
