@@ -280,7 +280,7 @@ public class CtripOrderServiceImpl implements CtripOrderService {
         //传入order模块,进行业务单元处理
         Order order = null;
         try {
-            order = ctripOrderBo.asOrder();
+            order = ctripOrderBo.asOrderOnlyById();
         } catch (BaseSystemException e) {
             return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.DATA_PARSE_EXCEPTION.custom(e.getExtMessage())), null);
         }
@@ -326,7 +326,7 @@ public class CtripOrderServiceImpl implements CtripOrderService {
         //传入order模块,进行业务单元处理
         Order order = null;
         try {
-            order = ctripOrderBo.asOrder();
+            order = ctripOrderBo.asOrderOnlyById();
         } catch (BaseSystemException e) {
             return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.DATA_PARSE_EXCEPTION.custom(e.getExtMessage())), null);
         }

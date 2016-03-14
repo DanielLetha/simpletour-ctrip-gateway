@@ -57,6 +57,18 @@ public class CtripOrderBo {
         this.requestBodyType = requestBodyType;
     }
 
+    public Order asOrderOnlyById() {
+        Order order = new Order();
+        if (!(this.requestBodyType.getOtaOrderId() == null || this.requestBodyType.getOtaOrderId().isEmpty())) {
+            order.setSourceOrderId(this.requestBodyType.getOtaOrderId());
+        }
+        if (!(this.requestBodyType.getVendorOrderId() == null || this.requestBodyType.getVendorOrderId().isEmpty())) {
+            order.setId(Long.parseLong(this.requestBodyType.getVendorOrderId()));
+        }
+        return order;
+    }
+
+
     /**
      * 对order实体进行封装
      *

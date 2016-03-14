@@ -66,7 +66,7 @@ public class CtripResourceTest extends BaseRESTfulService {
         List<PassengerInfo> passengerInfos = new ArrayList<>();
         PassengerInfo passengerInfo = new PassengerInfo();
         passengerInfo.setName("马大叔");
-//        passengerInfo.setMobile("909090909090");
+        passengerInfo.setMobile("909090909090");
         passengerInfo.setCardType("1");
         passengerInfo.setCardNo("511102199107200011");
         passengerInfos.add(passengerInfo);
@@ -115,7 +115,7 @@ public class CtripResourceTest extends BaseRESTfulService {
         //1.构造body信息
         RequestBodyType bodyType = new RequestBodyType();
         bodyType.setOtaOrderId("zxqfafjiqlfaqp9");
-        bodyType.setVendorOrderId("33681016832");
+        bodyType.setVendorOrderId("38819094528");
 
         //2.构造header信息
         RequestHeaderType headerType = new RequestHeaderType();
@@ -152,7 +152,7 @@ public class CtripResourceTest extends BaseRESTfulService {
         //1.构造body信息
         RequestBodyType bodyType = new RequestBodyType();
         bodyType.setOtaOrderId("zxqfafjiqlfaqp9");
-        bodyType.setVendorOrderId("33681016832");
+        bodyType.setVendorOrderId("38819094528");
 
         //2.构造header信息
         RequestHeaderType headerType = new RequestHeaderType();
