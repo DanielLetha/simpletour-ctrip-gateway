@@ -70,19 +70,14 @@ public class DateUtil {
     }
 
     /**
-     * 获取前天
+     * 获取昨天
      *
      * @return
      */
     public static Date getDayBeforeYesterDay() {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE, -2);
-        try {
-            return convertStrToDate(convertDateToStr(cal.getTime(), "yyyy-MM-dd"), "yyyy-MM-dd");
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return cal.getTime();
     }
 
     public static void main(String[] args) throws ParseException {
