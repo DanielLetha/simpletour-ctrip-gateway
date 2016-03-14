@@ -27,6 +27,7 @@ public enum CtripOrderError {
     STOCK_NOT_ENOUGH("1003", "库存不足"),
     PURCHASE_LIMITATION("1004", "限购"),
     ORDER_BOOK_FAILD("1100", "下单失败"),
+    ORDER_SOURCE_ID_NULL("1101", "OTA订单号不能为空"),
 
     /**
      * ==================取消相关====================
