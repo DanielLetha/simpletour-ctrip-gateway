@@ -125,6 +125,9 @@ public class CtripOrderBo {
         List<Cert> certList = new ArrayList<>();
         if (!(this.requestBodyType.getPassengerInfos() == null || this.requestBodyType.getPassengerInfos().isEmpty())) {
             this.requestBodyType.getPassengerInfos().stream().forEach(passengerInfo -> {
+                if ((passengerInfo.getCardType() == null || passengerInfo.getCardType().isEmpty()) || (passengerInfo.getCardNo() == null || passengerInfo.getCardNo().isEmpty())
+                        || (passengerInfo.getName() == null || passengerInfo.getName().isEmpty()) || (passengerInfo.getMobile() == null || passengerInfo.getMobile().isEmpty()))
+                    throw new BaseSystemException("出行人实名制认证信息不正确");
                 Cert cert = new Cert();
                 cert.setName(passengerInfo.getName());
                 cert.setMobile(passengerInfo.getMobile());

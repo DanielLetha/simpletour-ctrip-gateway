@@ -66,7 +66,7 @@ public class CtripResourceTest extends BaseRESTfulService {
         List<PassengerInfo> passengerInfos = new ArrayList<>();
         PassengerInfo passengerInfo = new PassengerInfo();
         passengerInfo.setName("马大叔");
-        passengerInfo.setMobile("909090909090");
+//        passengerInfo.setMobile("909090909090");
         passengerInfo.setCardType("1");
         passengerInfo.setCardNo("511102199107200011");
         passengerInfos.add(passengerInfo);
