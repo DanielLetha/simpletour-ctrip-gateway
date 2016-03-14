@@ -190,6 +190,9 @@ public class CtripOrderServiceImpl implements CtripOrderService {
             order.setUserId(userOrginal.getId());
         }
 
+        //将订单下的产品的名称关联到订单项的名称中
+        order.getOrderItems().get(0).setName(order.getOrderItems().get(0).getType() == OrderItem.Type.product ? order.getOrderItems().get(0).getProduct().getName() : order.getOrderItems().get(0).getTourism().getName());
+
         Optional<Order> orderOptional;
         try {
             orderOptional = orderService.addOrder(order);
