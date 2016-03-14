@@ -58,7 +58,7 @@ public class CtripResourceTest extends BaseRESTfulService {
         bodyType.setExtendInfo(extendInfoType);
         bodyType.setProductId("470");
         bodyType.setPrice("130");
-        bodyType.setCount(2);
+//        bodyType.setCount(1);
         bodyType.setContactName("偏分偏出三分");
         bodyType.setContactMobile("130111111111");
         bodyType.setUseDate("2016-02-15");
@@ -196,7 +196,7 @@ public class CtripResourceTest extends BaseRESTfulService {
         bodyType.setDepart("成都");
 //        bodyType.setArrive("CD");
 
-        bodyType.setDate(new Date());
+        bodyType.setDate("2016-03-10");
 
         //2.构造header信息
         RequestHeaderType headerType = new RequestHeaderType();

@@ -151,6 +151,14 @@ public class CtripOrderBo {
             });
         }
         orderItem.setCerts(certList);
+        //校验count是否和certs的数量一致
+        if (this.requestBodyType.getCount() != null && this.requestBodyType.getCount() >= 1) {
+            if (orderItem.getCerts().size() != this.getRequestBodyType().getCount())
+                throw new BaseSystemException("出行人数量不正确");
+        } else {
+            throw new BaseSystemException("订单数量不正确");
+        }
+
         orderItem.setOrder(order);
         List<OrderItem> orderItems = new ArrayList<>();
         orderItems.add(orderItem);
