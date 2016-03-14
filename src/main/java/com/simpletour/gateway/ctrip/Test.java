@@ -88,9 +88,9 @@ public class Test {
         bodyType.setCount(2);
         bodyType.setContactName("偏分偏出三分");
         bodyType.setContactMobile("13011111111");
-        bodyType.setUseDate("2016-03-28");
-        bodyType.setUseEndDate("2016-03-28");
-        bodyType.setOtaOrderId("23asfss"+Random.class.newInstance().nextInt()+"002ff-343264" + Random.class.newInstance().nextInt() + "adadadadad");
+        bodyType.setUseDate("2016-03-29");
+        bodyType.setUseEndDate("2016-03-29");
+        bodyType.setOtaOrderId("das"+Random.class.newInstance().nextInt()+"00af343264" + Random.class.newInstance().nextInt() + "a12dad");
 
         List<PassengerInfo> passengerInfos = new ArrayList<>();
         PassengerInfo passengerInfo = new PassengerInfo();
