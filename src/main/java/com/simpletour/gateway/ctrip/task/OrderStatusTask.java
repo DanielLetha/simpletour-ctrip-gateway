@@ -41,7 +41,7 @@ public class OrderStatusTask {
         condition.addCondition(new OrConditionSet().addCondition("source", SysConfig.XIECHENG_MP_SOURCE_ID).addCondition("source", SysConfig.XIECHENG_CP_SOURCE_ID));
         condition.addCondition("useDate", today, Condition.MatchType.less);
         //指定两天
-        condition.addCondition("useDate", DateUtil.getDayBeforeYesterDay(), Condition.MatchType.greater);
+        condition.addCondition("useDate", DateUtil.getYesterDay(), Condition.MatchType.greater);
         List<Order> orders = orderService.findOrdersByConditions(condition, IBaseDao.SortBy.ASC);
         if (orders.size() <= 0)
             return;

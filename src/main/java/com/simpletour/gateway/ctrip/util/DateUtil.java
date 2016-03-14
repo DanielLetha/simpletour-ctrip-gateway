@@ -74,12 +74,11 @@ public class DateUtil {
      *
      * @return
      */
-    public static Date getDayBeforeYesterDay() {
+    public static Date getYesterDay() {
         Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DATE, -2);
+        cal.add(Calendar.DATE, -1);
         return cal.getTime();
     }
-
     public static void main(String[] args) throws ParseException {
 //        try {
 //            Date date = convertStrToDate("2016-01-06", "yyyy-MM-dd");
@@ -94,6 +93,6 @@ public class DateUtil {
 //        Date date = new Date();
 //        String dateFormat = convertDateToStr(date, "yyyy-MM-dd");
 //        System.out.println(convertStrToDate(dateFormat, "yyyy-MM-dd"));
-        System.out.println(getDayBeforeYesterDay());
+        System.out.println(getYesterDay());
     }
 }
