@@ -39,7 +39,7 @@ public class OrderStatusTask {
         AndConditionSet condition = new AndConditionSet();
         condition.addCondition(new OrConditionSet().addCondition("status", OrderStatus.Status.MODIFY.name()).addCondition("status", OrderStatus.Status.FINISHED.name()));
         condition.addCondition(new OrConditionSet().addCondition("source", SysConfig.XIECHENG_MP_SOURCE_ID).addCondition("source", SysConfig.XIECHENG_CP_SOURCE_ID));
-        condition.addCondition("useDate", today, Condition.MatchType.less);
+        condition.addCondition("useDate", today, Condition.MatchType.lessOrEqual);
         //指定两天
         condition.addCondition("useDate", DateUtil.getYesterDay(), Condition.MatchType.greater);
         List<Order> orders = orderService.findOrdersByConditions(condition, IBaseDao.SortBy.ASC);
