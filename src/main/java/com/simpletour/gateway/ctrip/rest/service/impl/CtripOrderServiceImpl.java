@@ -270,7 +270,7 @@ public class CtripOrderServiceImpl implements CtripOrderService {
         if (!orderStatusOptional.isPresent()) {
             return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.ORDER_STATUS_UPDATE_FAILD), new ResponseBodyType(orderOptional.get().getOrderItems().get(0).getCerts().size(), "4", 8));
         }
-        return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.OPERATION_SUCCESS), new ResponseBodyType(orderOptional.get().getOrderItems().get(0).getCerts().size(), "2", 0));
+        return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.OPERATION_SUCCESS), new ResponseBodyType(orderOptional.get().getOrderItems().get(0).getCerts().size(), "2", 8));
     }
 
     @Override
