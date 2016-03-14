@@ -70,9 +70,9 @@ public class Test {
          */
 
 
-        for (int i = 0; i < 300; i++) {
-            buildString(SysConfig.CREATE_ORDER_METHOD);
-        }
+//        for (int i = 0; i < 300; i++) {
+//            buildString(SysConfig.CREATE_ORDER_METHOD);
+//        }
         System.out.println(buildString(SysConfig.CREATE_ORDER_METHOD));
     }
 
@@ -81,11 +81,11 @@ public class Test {
         //1.构造body信息
         RequestBodyType bodyType = new RequestBodyType();
         ExtendInfoType extendInfoType = new ExtendInfoType();
-        extendInfoType.setProductType("1");
+        extendInfoType.setProductType("2");
         bodyType.setExtendInfo(extendInfoType);
         bodyType.setProductId("10000396");
         bodyType.setPrice("1.00");
-        bodyType.setCount(2);
+        bodyType.setCount(3);
         bodyType.setContactName("偏分偏出三分");
         bodyType.setContactMobile("13011111111");
         bodyType.setUseDate("2016-03-29");

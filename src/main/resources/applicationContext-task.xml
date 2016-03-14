@@ -9,7 +9,7 @@
     <task:annotation-driven scheduler="threadPoolTaskExecutor"/>
 
     <task:scheduled-tasks>
-        <task:scheduled ref="orderStatusTask" method="refresh" cron="0 0 0 * * *"/>
+        <task:scheduled ref="orderStatusTask" method="refresh" cron="0 0 22 * * *"/>
     </task:scheduled-tasks>
 
 </beans>

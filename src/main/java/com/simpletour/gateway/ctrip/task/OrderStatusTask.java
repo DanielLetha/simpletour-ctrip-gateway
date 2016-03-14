@@ -35,11 +35,12 @@ public class OrderStatusTask {
 
     @Transactional
     public void refresh() throws ParseException {
-        Date today = DateUtil.convertStrToDate(DateUtil.convertDateToStr(new Date(), "yyyy-MM-dd"), "yyyy-MM-dd");
+        Date today = new Date();
         AndConditionSet condition = new AndConditionSet();
         condition.addCondition(new OrConditionSet().addCondition("status", OrderStatus.Status.MODIFY.name()).addCondition("status", OrderStatus.Status.FINISHED.name()));
         condition.addCondition(new OrConditionSet().addCondition("source", SysConfig.XIECHENG_MP_SOURCE_ID).addCondition("source", SysConfig.XIECHENG_CP_SOURCE_ID));
         condition.addCondition("useDate", today, Condition.MatchType.less);
+        //指定两天
         condition.addCondition("useDate", DateUtil.getDayBeforeYesterDay(), Condition.MatchType.greater);
         List<Order> orders = orderService.findOrdersByConditions(condition, IBaseDao.SortBy.ASC);
         if (orders.size() <= 0)
