@@ -64,8 +64,16 @@ public class Test {
 //        System.out.println();
 //        System.out.println(ret);
 
-        System.out.println(buildString(SysConfig.CREATE_ORDER_METHOD));
+        /**
+         *行程:557 ,type:0
+         *产品:10000396,type1
+         */
 
+
+        for (int i = 0; i < 300; i++) {
+            buildString(SysConfig.CREATE_ORDER_METHOD);
+        }
+        System.out.println(buildString(SysConfig.CREATE_ORDER_METHOD));
     }
 
     private static String buildString(String serviceName) throws UnsupportedEncodingException, IllegalAccessException, InstantiationException {
@@ -73,16 +81,16 @@ public class Test {
         //1.构造body信息
         RequestBodyType bodyType = new RequestBodyType();
         ExtendInfoType extendInfoType = new ExtendInfoType();
-        extendInfoType.setProductType("0");
+        extendInfoType.setProductType("1");
         bodyType.setExtendInfo(extendInfoType);
-        bodyType.setProductId("471");
+        bodyType.setProductId("10000396");
         bodyType.setPrice("1.00");
         bodyType.setCount(2);
         bodyType.setContactName("偏分偏出三分");
-        bodyType.setContactMobile("130111111111");
-        bodyType.setUseDate("2016-02-29");
-        bodyType.setUseEndDate("2016-02-29");
-        bodyType.setOtaOrderId("2340002978-343264" + Random.class.newInstance().nextInt());
+        bodyType.setContactMobile("13011111111");
+        bodyType.setUseDate("2016-03-28");
+        bodyType.setUseEndDate("2016-03-28");
+        bodyType.setOtaOrderId("23asfss"+Random.class.newInstance().nextInt()+"002ff-343264" + Random.class.newInstance().nextInt() + "adadadadad");
 
         List<PassengerInfo> passengerInfos = new ArrayList<>();
         PassengerInfo passengerInfo = new PassengerInfo();
@@ -127,6 +135,8 @@ public class Test {
         buffer.append("9C1012E99067AA970A972103B2CD3D0C");
         String sign = MD5.getMD5String(buffer.toString().getBytes()).toLowerCase();
         headerType.setSign(sign);
+
+        System.out.println("sign:" + sign + ",otaId:" + bodyType.getOtaOrderId());
 
         return XMLParseUtil.convertToXml(request);
     }

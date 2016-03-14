@@ -58,7 +58,7 @@ public class CtripResourceTest extends BaseRESTfulService {
         bodyType.setExtendInfo(extendInfoType);
         bodyType.setProductId("470");
         bodyType.setPrice("130");
-//        bodyType.setCount(1);
+        bodyType.setCount(2);
         bodyType.setContactName("偏分偏出三分");
         bodyType.setContactMobile("130111111111");
         bodyType.setUseDate("2016-02-15");
