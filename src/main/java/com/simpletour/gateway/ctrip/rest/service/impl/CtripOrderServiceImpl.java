@@ -3,17 +3,11 @@ package com.simpletour.gateway.ctrip.rest.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.simpletour.biz.inventory.IStockBiz;
 import com.simpletour.biz.order.IOrderBiz;
-import com.simpletour.biz.order.bo.VerifyResponse;
-import com.simpletour.biz.order.error.TravelOrderBizError;
-import com.simpletour.biz.order.impl.OrderBizImpl;
-import com.simpletour.biz.order.util.XMLParseUtil;
 import com.simpletour.biz.product.IProductBiz;
-import com.simpletour.biz.resources.IResourcesBiz;
 import com.simpletour.common.core.dao.IBaseDao;
 import com.simpletour.common.core.dao.query.condition.AndConditionSet;
 import com.simpletour.common.core.dao.query.condition.Condition;
 import com.simpletour.common.core.exception.BaseSystemException;
-import com.simpletour.common.utils.JerseyUtil;
 import com.simpletour.domain.inventory.Stock;
 import com.simpletour.domain.order.Order;
 import com.simpletour.domain.order.OrderItem;
@@ -39,7 +33,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import javax.swing.text.html.Option;
 import java.text.ParseException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -93,6 +86,8 @@ public class CtripOrderServiceImpl implements CtripOrderService {
 
 
     private VerifyOrderResponse validateOrderBasicInfo(Order order) {
+        if (order.getSourceOrderId() == null || order.getSourceOrderId().isEmpty())
+            return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.VALIDATE_FAILED.custom("OTA订单号不能为空")), null);
         if (order.getName() == null || order.getName().isEmpty())
             return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.VALIDATE_FAILED.custom("联系人姓名不能为空")), null);
         if (order.getMobile() == null || order.getMobile().isEmpty())
@@ -142,7 +137,6 @@ public class CtripOrderServiceImpl implements CtripOrderService {
     @Override
     @Transactional
     public VerifyOrderResponse createOrder(VerifyOrderRequest verifyOrderRequest) {
-
         //获取转化为实体后的数据,并对数据进行组装
         CtripOrderBo ctripOrderBo = new CtripOrderBo(verifyOrderRequest.getHeader(), verifyOrderRequest.getBody());
         //传入order模块,进行业务单元处理
@@ -199,7 +193,6 @@ public class CtripOrderServiceImpl implements CtripOrderService {
         try {
             orderOptional = orderService.addOrder(order);
         } catch (BaseSystemException e) {
-            stockValidForOrder(order);
             //验证库存
             //先检查库存还有多少
             if (!getStock(order).isPresent()) {
@@ -227,7 +220,12 @@ public class CtripOrderServiceImpl implements CtripOrderService {
         //获取转化为实体后的数据,并对数据进行组装
         CtripOrderBo ctripOrderStatusBo = new CtripOrderBo(verifyOrderRequest.getHeader(), verifyOrderRequest.getBody());
         //传入orderStatus模块,进行业务单元处理
-        OrderStatus orderStatus = ctripOrderStatusBo.asOrderStatus();
+        OrderStatus orderStatus = null;
+        try {
+            orderStatus = ctripOrderStatusBo.asOrderStatus();
+        } catch (BaseSystemException e) {
+            return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.DATA_PARSE_EXCEPTION.custom(e.getExtMessage())), null);
+        }
         Optional<OrderStatus> orderStatusOptional;
         //查询一次order
         Optional<Order> orderOptional;

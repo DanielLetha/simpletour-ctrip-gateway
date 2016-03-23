@@ -5,12 +5,11 @@ import com.simpletour.domain.order.*;
 import com.simpletour.domain.product.Product;
 import com.simpletour.domain.product.Tourism;
 import com.simpletour.gateway.ctrip.config.SysConfig;
-import com.simpletour.gateway.ctrip.rest.pojo.type.orderType.RequestBodyType;
 import com.simpletour.gateway.ctrip.rest.pojo.type.RequestHeaderType;
+import com.simpletour.gateway.ctrip.rest.pojo.type.orderType.RequestBodyType;
 import com.simpletour.gateway.ctrip.util.DateUtil;
 
 import java.math.BigDecimal;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -63,7 +62,11 @@ public class CtripOrderBo {
             order.setSourceOrderId(this.requestBodyType.getOtaOrderId());
         }
         if (!(this.requestBodyType.getVendorOrderId() == null || this.requestBodyType.getVendorOrderId().isEmpty())) {
-            order.setId(Long.parseLong(this.requestBodyType.getVendorOrderId()));
+            try {
+                order.setId(Long.parseLong(this.requestBodyType.getVendorOrderId()));
+            } catch (NumberFormatException e) {
+                throw new BaseSystemException("供应商订单号错误");
+            }
         }
         return order;
     }
@@ -88,13 +91,13 @@ public class CtripOrderBo {
         order.setSub(false);
         //来自携程的订单设置为tenantId=1L
         order.setTenantId(1L);
+
         //设置source
         Source source = new Source();
         try {
             source.setId(Long.parseLong(this.requestHeaderType.getAccountId()));
         } catch (NumberFormatException e) {
-            BaseSystemException baseSystemException = new BaseSystemException("渠道id错误");
-            throw baseSystemException;
+            throw new BaseSystemException("渠道id错误");
         }
         order.setSource(source);
         //设置orderItem
@@ -105,8 +108,7 @@ public class CtripOrderBo {
                 try {
                     product.setId(Long.parseLong(this.requestBodyType.getProductId()));
                 } catch (NumberFormatException e) {
-                    BaseSystemException baseSystemException = new BaseSystemException("产品id错误");
-                    throw baseSystemException;
+                    throw new BaseSystemException("产品id错误");
                 }
                 product.setOnline(true);
                 orderItem.setProduct(product);
@@ -116,8 +118,7 @@ public class CtripOrderBo {
                 try {
                     tourism.setId(Long.parseLong(this.requestBodyType.getProductId()));
                 } catch (NumberFormatException e) {
-                    BaseSystemException baseSystemException = new BaseSystemException("产品id错误");
-                    throw baseSystemException;
+                    throw new BaseSystemException("产品id错误");
                 }
                 tourism.setOnline(true);
                 orderItem.setTourism(tourism);
@@ -126,13 +127,14 @@ public class CtripOrderBo {
         }
         if (!(this.requestBodyType.getPrice() == null || this.requestBodyType.getPrice().isEmpty())) {
             orderItem.setSourcePrice(BigDecimal.valueOf(Double.parseDouble(this.requestBodyType.getPrice())));
+        } else {
+            throw new BaseSystemException("产品单价不存在");
         }
         orderItem.setQuantity(this.requestBodyType.getCount());
         try {
             orderItem.setDate(DateUtil.convertStrToDate(this.requestBodyType.getUseDate(), "yyyy-MM-dd"));
-        } catch (ParseException e) {
-            BaseSystemException baseSystemException = new BaseSystemException("产品使用日期错误");
-            throw baseSystemException;
+        } catch (Exception e) {
+            throw new BaseSystemException("产品使用日期错误");
         }
         List<Cert> certList = new ArrayList<>();
         if (!(this.requestBodyType.getPassengerInfos() == null || this.requestBodyType.getPassengerInfos().isEmpty())) {
@@ -199,7 +201,11 @@ public class CtripOrderBo {
     public OrderStatus asOrderStatus() {
         OrderStatus orderStatus = new OrderStatus();
         Order order = new Order();
-        order.setId(Long.parseLong(this.requestBodyType.getVendorOrderId()));
+        try {
+            order.setId(Long.parseLong(this.requestBodyType.getVendorOrderId()));
+        } catch (Exception e) {
+            throw new BaseSystemException("供应商订单号错误");
+        }
         //可以不用封装这个字段,由于后台是取order的Id来取order
         order.setSourceOrderId(this.requestBodyType.getOtaOrderId());
         orderStatus.setOrder(order);

@@ -3,11 +3,13 @@ package com.simpletour.gateway.ctrip.rest.service.impl;
 import com.simpletour.common.utils.MD5;
 import com.simpletour.gateway.ctrip.config.SysConfig;
 import com.simpletour.gateway.ctrip.error.CtripOrderError;
-import com.simpletour.gateway.ctrip.rest.pojo.*;
+import com.simpletour.gateway.ctrip.error.CtripTransError;
+import com.simpletour.gateway.ctrip.rest.pojo.VerifyOrderRequest;
+import com.simpletour.gateway.ctrip.rest.pojo.VerifyResponse;
+import com.simpletour.gateway.ctrip.rest.pojo.VerifyTransOrderRequest;
+import com.simpletour.gateway.ctrip.rest.pojo.VerifyTransRequest;
 import com.simpletour.gateway.ctrip.rest.pojo.type.RequestHeaderType;
 import com.simpletour.gateway.ctrip.rest.pojo.type.ResponseHeaderType;
-import com.simpletour.gateway.ctrip.rest.pojo.type.orderType.RequestBodyType;
-import com.simpletour.gateway.ctrip.rest.pojo.type.transType.RequestBodyTypeForTrans;
 import com.simpletour.gateway.ctrip.rest.service.CtripOrderService;
 import com.simpletour.gateway.ctrip.rest.service.CtripTransService;
 import com.simpletour.gateway.ctrip.rest.service.CtripValidator;
@@ -15,7 +17,6 @@ import com.simpletour.gateway.ctrip.util.StringUtils;
 import com.simpletour.gateway.ctrip.util.XMLParseUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import sun.misc.BASE64Encoder;
 
 import javax.annotation.Resource;
 import java.io.UnsupportedEncodingException;
@@ -28,36 +29,33 @@ import java.text.ParseException;
 public class CtripValidatorImpl implements CtripValidator {
 
     @Resource
-    private CtripTransService ctripTransService;
-
-    @Resource
     private CtripOrderService ctripOrderService;
 
-    @Value("${xiecheng.signkey}")
-    private String signKey;
+    @Resource
+    private CtripTransService ctripTransService;
+
+    @Value("${xiecheng.mp.signkey}")
+    private String mpSignKey;
+
+    @Value("${xiecheng.cp.signkey}")
+    private String cpSignKey;
+
 
     /**
-     * 校验请求
+     * 校验请求:针对携程门票
      *
      * @param request
      * @return
      */
-    public VerifyResponse validatePre(String request, String methodName) throws ParseException {
+    public VerifyResponse validatePre(String request) throws ParseException {
         if (request == null || request.isEmpty()) {
             return new VerifyResponse(new ResponseHeaderType(CtripOrderError.JSON_RESOLVE_FAILED));
         }
 
         //将去头的xml转换成可以处理的实体类
         VerifyOrderRequest verifyOrderRequest = null;
-        VerifyTransRequest verifyTransRequest = null;
         try {
-            if (SysConfig.TOURISM_HANDLER.equals(methodName)) {
-                verifyTransRequest = XMLParseUtil.convertToJavaBean(request, VerifyTransRequest.class);
-            } else if (SysConfig.ORDER_HANDLER.equals(methodName)) {
-                verifyOrderRequest = XMLParseUtil.convertToJavaBean(request, VerifyOrderRequest.class);
-            } else {
-                return new VerifyResponse(new ResponseHeaderType(CtripOrderError.JSON_RESOLVE_FAILED));
-            }
+            verifyOrderRequest = XMLParseUtil.convertToJavaBean(request, VerifyOrderRequest.class);
         } catch (Exception e) {
             return new VerifyResponse(new ResponseHeaderType(CtripOrderError.XML_RESOLVE_FAILED));
         }
@@ -66,7 +64,14 @@ public class CtripValidatorImpl implements CtripValidator {
         String bodyString = StringUtils.formatXml(XMLParseUtil.subBodyStringForXml(request));
 
         //取文件头转为requestHeaderType实体类
-        RequestHeaderType requestHeaderType = SysConfig.ORDER_HANDLER.equals(methodName) ? verifyOrderRequest.getHeader() : (SysConfig.TOURISM_HANDLER.equals(methodName) ? verifyTransRequest.getHeader() : null);
+        RequestHeaderType requestHeaderType = verifyOrderRequest.getHeader();
+
+        //校验文件头是否转化为实体正确,并且确定请求是针对携程门票
+        if (requestHeaderType == null)
+            return new VerifyResponse(new ResponseHeaderType(CtripOrderError.XML_RESOLVE_FAILED));
+        if (requestHeaderType.getAccountId() != null && !SysConfig.XIECHENG_MP_SOURCE_ID.toString().equals(requestHeaderType.getAccountId().trim()))
+            return new VerifyResponse(new ResponseHeaderType(CtripOrderError.OTA_ACCOUNT_WRONG));
+
         StringBuffer signTo = new StringBuffer(requestHeaderType.getAccountId());
         signTo.append(requestHeaderType.getServiceName());
         signTo.append(requestHeaderType.getRequestTime());
@@ -76,7 +81,7 @@ public class CtripValidatorImpl implements CtripValidator {
             return new VerifyResponse(new ResponseHeaderType(CtripOrderError.JSON_RESOLVE_FAILED));
         }
         signTo.append(requestHeaderType.getVersion());
-        signTo.append(signKey);
+        signTo.append(mpSignKey);
         //验证签名
         if (!requestHeaderType.getSign().equals(MD5.getMD5String(signTo.toString().getBytes()).toLowerCase())) {
             return new VerifyResponse(new ResponseHeaderType(CtripOrderError.SIGN_ERROR));
@@ -93,10 +98,110 @@ public class CtripValidatorImpl implements CtripValidator {
                 return ctripOrderService.queryOrder(verifyOrderRequest);
             case SysConfig.RESEND_METHOD:
                 return ctripOrderService.resend(verifyOrderRequest);
-            case SysConfig.QUERY_TOURISM_METHOD:
-                return ctripTransService.queryTourism(verifyTransRequest);
             default:
                 return new VerifyResponse(new ResponseHeaderType(CtripOrderError.JSON_RESOLVE_FAILED));
         }
     }
+
+    @Override
+    public VerifyResponse validatePreForTrans(String request) {
+        if (request == null || request.isEmpty()) {
+            return new VerifyResponse(new ResponseHeaderType(CtripTransError.JSON_RESOLVE_FAILED));
+        }
+        //将去头的xml转换成可以处理的实体类
+        VerifyTransRequest verifyTransRequest = null;
+        try {
+            verifyTransRequest = XMLParseUtil.convertToJavaBean(request, VerifyTransRequest.class);
+        } catch (Exception e) {
+            return new VerifyResponse(new ResponseHeaderType(CtripTransError.XML_RESOLVE_FAILED));
+        }
+
+        //过滤出body信息
+        String bodyString = StringUtils.formatXml(XMLParseUtil.subBodyStringForXml(request));
+
+        //取文件头转为requestHeaderType实体类
+        RequestHeaderType requestHeaderType = verifyTransRequest.getHeader();
+
+        //校验文件头是否转化为实体正确,并且确定请求是针对携程车票
+        if (requestHeaderType == null)
+            return new VerifyResponse(new ResponseHeaderType(CtripTransError.XML_RESOLVE_FAILED));
+        if (requestHeaderType.getAccountId() != null && !SysConfig.XIECHENG_CP_SOURCE_ID.toString().equals(requestHeaderType.getAccountId().trim()))
+            return new VerifyResponse(new ResponseHeaderType(CtripTransError.OTA_ACCOUNT_WRONG));
+
+        StringBuffer signTo = new StringBuffer(requestHeaderType.getAccountId());
+        signTo.append(requestHeaderType.getServiceName());
+        signTo.append(requestHeaderType.getRequestTime());
+        try {
+            signTo.append(org.bouncycastle.util.encoders.Base64.toBase64String(bodyString.getBytes("UTF-8")));
+        } catch (UnsupportedEncodingException e) {
+            return new VerifyResponse(new ResponseHeaderType(CtripTransError.JSON_RESOLVE_FAILED));
+        }
+        signTo.append(requestHeaderType.getVersion());
+        signTo.append(cpSignKey);
+        //验证签名
+        if (!requestHeaderType.getSign().equals(MD5.getMD5String(signTo.toString().getBytes()).toLowerCase())) {
+            return new VerifyResponse(new ResponseHeaderType(CtripTransError.SIGN_ERROR));
+        }
+
+        //验证方法名
+        if (!requestHeaderType.getServiceName().equals(SysConfig.QUERY_TOURISM_METHOD))
+            return new VerifyResponse(new ResponseHeaderType(CtripTransError.REQUEST_METHOD_WRONG));
+
+        return ctripTransService.queryTourism(verifyTransRequest);
+    }
+
+    @Override
+    public VerifyResponse validatePreForTransOrder(String request) throws ParseException {
+        if (request == null || request.isEmpty()) {
+            return new VerifyResponse(new ResponseHeaderType(CtripTransError.JSON_RESOLVE_FAILED));
+        }
+        //将去头的xml转换成可以处理的实体类
+        VerifyTransOrderRequest verifyTransOrderRequest = null;
+        try {
+            verifyTransOrderRequest = XMLParseUtil.convertToJavaBean(request, VerifyTransOrderRequest.class);
+        } catch (Exception e) {
+            return new VerifyResponse(new ResponseHeaderType(CtripTransError.XML_RESOLVE_FAILED));
+        }
+
+        //过滤出body信息
+        String bodyString = StringUtils.formatXml(XMLParseUtil.subBodyStringForXml(request));
+
+        //取文件头转为requestHeaderType实体类
+        RequestHeaderType requestHeaderType = verifyTransOrderRequest.getHeader();
+
+        //校验文件头是否转化为实体正确,并且确定请求是针对携程车票
+        if (requestHeaderType == null)
+            return new VerifyResponse(new ResponseHeaderType(CtripTransError.XML_RESOLVE_FAILED));
+        if (requestHeaderType.getAccountId() != null && !SysConfig.XIECHENG_CP_SOURCE_ID.toString().equals(requestHeaderType.getAccountId().trim()))
+            return new VerifyResponse(new ResponseHeaderType(CtripTransError.OTA_ACCOUNT_WRONG));
+
+        StringBuffer signTo = new StringBuffer(requestHeaderType.getAccountId());
+        signTo.append(requestHeaderType.getServiceName());
+        signTo.append(requestHeaderType.getRequestTime());
+        try {
+            signTo.append(org.bouncycastle.util.encoders.Base64.toBase64String(bodyString.getBytes("UTF-8")));
+        } catch (UnsupportedEncodingException e) {
+            return new VerifyResponse(new ResponseHeaderType(CtripTransError.JSON_RESOLVE_FAILED));
+        }
+        signTo.append(requestHeaderType.getVersion());
+        signTo.append(cpSignKey);
+        //验证签名
+        if (!requestHeaderType.getSign().equals(MD5.getMD5String(signTo.toString().getBytes()).toLowerCase())) {
+            return new VerifyResponse(new ResponseHeaderType(CtripTransError.SIGN_ERROR));
+        }
+
+        switch (requestHeaderType.getServiceName()) {
+            case SysConfig.TRANS_VERIFY_ORDER_METHOD:
+                return ctripTransService.transVerifyOrder(verifyTransOrderRequest);
+            case SysConfig.TRANS_CREATE_ORDER_METHOD:
+                return ctripTransService.transCreateOrder(verifyTransOrderRequest);
+            case SysConfig.TRANS_QUERY_ORDER_ID_METHOD:
+                return ctripTransService.transQueryOrderById(verifyTransOrderRequest);
+            case SysConfig.TRANS_QUERY_ORDER_LIST_METHOD:
+                return ctripTransService.transQueryOrderList(verifyTransOrderRequest);
+            default:
+                return new VerifyResponse(new ResponseHeaderType(CtripTransError.JSON_RESOLVE_FAILED));
+        }
+    }
+
 }
