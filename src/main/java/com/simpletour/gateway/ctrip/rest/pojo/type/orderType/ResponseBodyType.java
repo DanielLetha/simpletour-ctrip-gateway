@@ -66,6 +66,7 @@ public class ResponseBodyType {
      * 申请取消成功 2
      * 取消（审核）成功 3
      * 取消（审核）失败 4
+     * 已入园5
      * 注意：orderStatus为2或3时resultCode均返回0000
      */
     private String orderStatus;

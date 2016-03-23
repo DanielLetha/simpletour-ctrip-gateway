@@ -13,8 +13,8 @@ public class SysConfig {
 
     public static final String TOURISM_HANDLER = "tourismHandler";
 
-    public static final String CALL_BACK_URL = "callBackUrl";
-
+    public static final String TOURISM_ORDER_HANDLER = "tourismOrderHandler";
+    //门票相关
     public static final String VERIFY_ORDER_METHOD = "VerifyOrder";
 
     public static final String CREATE_ORDER_METHOD = "CreateOrder";
@@ -24,8 +24,19 @@ public class SysConfig {
     public static final String QUERY_ORDER_METHOD = "QueryOrder";
 
     public static final String RESEND_METHOD = "ReSend";
+    //车票相关
+    public static final String QUERY_TOURISM_METHOD = "QueryTourism";
 
-    public static final String QUERY_TOURISM_METHOD = "queryTourism";
+    public static final String TRANS_VERIFY_ORDER_METHOD = "TransVerifyOrder";
+
+    public static final String TRANS_CREATE_ORDER_METHOD = "TransCreateOrder";
+
+    public static final String TRANS_QUERY_ORDER_ID_METHOD = "TransQueryOrderById";
+
+    public static final String TRANS_QUERY_ORDER_LIST_METHOD = "TransQueryOrderList";
+
+    //回调
+    public static final String CALL_BACK_URL = "callBackUrl";
 
     public static final String NOTICE_ORDER_CANCEL = "NoticeOrderCancel";
 

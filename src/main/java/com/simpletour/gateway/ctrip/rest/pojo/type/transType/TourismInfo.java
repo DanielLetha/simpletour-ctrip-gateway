@@ -74,6 +74,8 @@ public class TourismInfo {
         this.price = price;
     }
 
+
+
     /**
      * setter & getter
      */

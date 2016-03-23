@@ -39,11 +39,11 @@ public class CtripResource extends BaseRESTfulService {
     @POST
     @Path(SysConfig.ORDER_HANDLER)
     public VerifyResponse orderHandler(String request) throws ParseException {
-        return ctripValidator.validatePre(request, SysConfig.ORDER_HANDLER);
+        return ctripValidator.validatePre(request);
     }
 
     /**
-     * 行程模块处理接口
+     * 行程模块处理车次查询接口
      *
      * @param request 请求文
      * @return
@@ -51,7 +51,20 @@ public class CtripResource extends BaseRESTfulService {
     @POST
     @Path(SysConfig.TOURISM_HANDLER)
     public VerifyResponse tourismHandler(String request) throws ParseException {
-        return ctripValidator.validatePre(request, SysConfig.TOURISM_HANDLER);
+        return ctripValidator.validatePreForTrans(request);
+    }
+
+    /**
+     * 行程模块订单处理接口
+     *
+     * @param request 请求文
+     * @return
+     * @throws ParseException
+     */
+    @POST
+    @Path(SysConfig.TOURISM_ORDER_HANDLER)
+    public VerifyResponse tourismOrderHanlder(String request) throws ParseException {
+        return ctripValidator.validatePreForTransOrder(request);
     }
 
     /**

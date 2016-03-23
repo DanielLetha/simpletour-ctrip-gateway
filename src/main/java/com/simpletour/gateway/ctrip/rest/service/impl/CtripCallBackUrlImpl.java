@@ -30,8 +30,8 @@ public class CtripCallBackUrlImpl implements CtripCallBackUrl {
     @Resource
     private IOrderService orderService;
 
-    @Value("${xiecheng.signkey}")
-    private String signKey;
+    @Value("${xiecheng.mp.signkey}")
+    private String mpSignKey;
 
     @Value("${xiecheng.callback.cancelOrder}")
     private String url;
@@ -64,7 +64,7 @@ public class CtripCallBackUrlImpl implements CtripCallBackUrl {
         //构造请求
         VerifyOrderRequest verifyOrderRequest = new VerifyOrderRequest();
         try {
-            verifyOrderRequest.buildRequest(orderOptional.get(), signKey, ctripOrderCallBackBo.getType());
+            verifyOrderRequest.buildRequest(orderOptional.get(), mpSignKey, ctripOrderCallBackBo.getType());
         } catch (UnsupportedEncodingException e) {
             return new VerifyResponse(new ResponseHeaderType(CtripOrderError.ORDER_TRANSFER_TO_REQUEST_FAILED));
         }
@@ -79,7 +79,7 @@ public class CtripCallBackUrlImpl implements CtripCallBackUrl {
 
     @Override
     public VerifyResponse getConsumeOrderCallBack(RequestBodyType requestBodyType) throws UnsupportedEncodingException {
-        VerifyOrderRequest verifyOrderRequest = new VerifyOrderRequest().buildRequestForConsume(requestBodyType, signKey);
+        VerifyOrderRequest verifyOrderRequest = new VerifyOrderRequest().buildRequestForConsume(requestBodyType, mpSignKey);
         //调用请求
         String response = JerseyUtil.getResultForUrl(consumeUrl, StringUtils.formatXml(XMLParseUtil.convertToXml(verifyOrderRequest)), "xml");
         if (response == null || response.isEmpty()) {

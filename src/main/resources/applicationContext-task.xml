@@ -10,6 +10,7 @@
 
     <task:scheduled-tasks>
         <task:scheduled ref="orderStatusTask" method="refresh" cron="0 0 22 * * *"/>
+        <task:scheduled ref="orderStatusForTransTask" method="refresh" cron="0 0 22 * * *"/>
     </task:scheduled-tasks>
 
 </beans>

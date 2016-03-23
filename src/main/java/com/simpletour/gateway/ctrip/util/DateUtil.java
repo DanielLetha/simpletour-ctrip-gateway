@@ -87,7 +87,7 @@ public class DateUtil {
 //            e.printStackTrace();
 //        }
 
-//        System.out.println(convertDateToStr(new Date(), "yyyy-MM-dd"));
+        System.out.println(convertDateToStr(new Date(), "yyyy-MM-dd 00:00:00"));
 //        Long time = 178260L;
 //        System.out.println(convertLongToTime(time));
 //        Date date = new Date();
