@@ -96,7 +96,7 @@ public class CtripTransServiceImpl implements CtripTransService {
         if (!(verifyTransRequest.getBody().getDate() == null || verifyTransRequest.getBody().getDate().isEmpty())) {
             try {
                 dateForStock = DateUtil.convertStrToDate(verifyTransRequest.getBody().getDate(), "yyyy-MM-dd");
-            } catch (ParseException e) {
+            } catch (Exception e) {
                 return new VerifyTransResponse(new ResponseHeaderType(CtripTransError.OTA_BUS_SEARCH_PARAM_WRONG), null);
             }
         }
@@ -327,7 +327,7 @@ public class CtripTransServiceImpl implements CtripTransService {
         Date dateForSearch;
         try {
             dateForSearch = DateUtil.convertStrToDate(verifyTransOrderRequest.getBody().getDate() + " 00:00:00", "yyyy-MM-dd hh:mm:ss");
-        } catch (ParseException e) {
+        } catch (Exception e) {
             return new VerifyTransOrderResponse(new ResponseHeaderType(CtripTransError.DATA_PARSE_EXCEPTION));
         }
         AndConditionSet conditionSet = new AndConditionSet();
