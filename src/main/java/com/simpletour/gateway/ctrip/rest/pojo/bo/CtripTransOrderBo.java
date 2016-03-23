@@ -102,7 +102,7 @@ public class CtripTransOrderBo {
         orderItem.setQuantity(this.requestBodyTypeForTransOrder.getCount());
         try {
             orderItem.setDate(DateUtil.convertStrToDate(this.requestBodyTypeForTransOrder.getUseDate(), "yyyy-MM-dd"));
-        } catch (ParseException e) {
+        } catch (Exception e) {
             throw new BaseSystemException("产品使用日期错误");
         }
         List<Cert> certList = new ArrayList<>();

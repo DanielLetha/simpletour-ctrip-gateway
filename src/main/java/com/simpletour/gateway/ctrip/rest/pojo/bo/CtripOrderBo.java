@@ -10,7 +10,6 @@ import com.simpletour.gateway.ctrip.rest.pojo.type.orderType.RequestBodyType;
 import com.simpletour.gateway.ctrip.util.DateUtil;
 
 import java.math.BigDecimal;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -134,7 +133,7 @@ public class CtripOrderBo {
         orderItem.setQuantity(this.requestBodyType.getCount());
         try {
             orderItem.setDate(DateUtil.convertStrToDate(this.requestBodyType.getUseDate(), "yyyy-MM-dd"));
-        } catch (ParseException e) {
+        } catch (Exception e) {
             throw new BaseSystemException("产品使用日期错误");
         }
         List<Cert> certList = new ArrayList<>();
@@ -204,7 +203,7 @@ public class CtripOrderBo {
         Order order = new Order();
         try {
             order.setId(Long.parseLong(this.requestBodyType.getVendorOrderId()));
-        } catch (BaseSystemException e) {
+        } catch (Exception e) {
             throw new BaseSystemException("供应商订单号错误");
         }
         //可以不用封装这个字段,由于后台是取order的Id来取order
