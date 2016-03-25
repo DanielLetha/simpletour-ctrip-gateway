@@ -235,4 +235,29 @@ public class CtripResourceTest extends BaseRESTfulService {
         return ctripValidator.validatePre(this.buildStringForQueryOrder(SysConfig.RESEND_METHOD));
     }
 
+//    /**
+//     * 生成sign测试接口
+//     * @param request
+//     * @return
+//     * @throws UnsupportedEncodingException
+//     */
+//    @POST
+//    @Path("/sign")
+//    public String createSign(String request) throws UnsupportedEncodingException {
+//        VerifyCreateSignRequest verifyCreateSignRequest = XMLParseUtil.convertToJavaBean(request,VerifyCreateSignRequest.class);
+//        String xmlBodyString = StringUtils.formatXml(XMLParseUtil.subBodyStringForXml(request));
+//
+//        //3.编码sign
+//        String xmlBase64 = org.bouncycastle.util.encoders.Base64.toBase64String(xmlBodyString.getBytes("UTF-8"));
+//        StringBuffer buffer = new StringBuffer();
+//        buffer.append(verifyCreateSignRequest.getHeader().getAccountId());
+//        buffer.append(verifyCreateSignRequest.getHeader().getServiceName());
+//        buffer.append(verifyCreateSignRequest.getHeader().getRequestTime());
+//        buffer.append(xmlBase64);
+//        buffer.append(verifyCreateSignRequest.getHeader().getVersion());
+//        buffer.append(signKey);
+//        String sign = MD5.getMD5String(buffer.toString().getBytes()).toLowerCase();
+//        return sign;
+//    }
+
 }
