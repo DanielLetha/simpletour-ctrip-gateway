@@ -83,7 +83,11 @@ public class CtripOrderBo {
             order.setSourceOrderId(this.requestBodyType.getOtaOrderId());
         }
         if (!(this.requestBodyType.getVendorOrderId() == null || this.requestBodyType.getVendorOrderId().isEmpty())) {
-            order.setId(Long.parseLong(this.requestBodyType.getVendorOrderId()));
+            try {
+                order.setId(Long.parseLong(this.requestBodyType.getVendorOrderId()));
+            } catch (NumberFormatException e) {
+                throw new BaseSystemException("供应商订单号错误");
+            }
         }
         order.setName(this.requestBodyType.getContactName());
         order.setMobile(this.requestBodyType.getContactMobile());

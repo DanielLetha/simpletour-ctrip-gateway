@@ -3,10 +3,12 @@ package com.simpletour.gateway.ctrip;
 import com.simpletour.common.utils.MD5;
 import com.simpletour.gateway.ctrip.config.SysConfig;
 import com.simpletour.gateway.ctrip.rest.pojo.VerifyOrderRequest;
+import com.simpletour.gateway.ctrip.rest.pojo.VerifyTransOrderRequest;
 import com.simpletour.gateway.ctrip.rest.pojo.type.orderType.ExtendInfoType;
 import com.simpletour.gateway.ctrip.rest.pojo.type.orderType.PassengerInfo;
 import com.simpletour.gateway.ctrip.rest.pojo.type.orderType.RequestBodyType;
 import com.simpletour.gateway.ctrip.rest.pojo.type.RequestHeaderType;
+import com.simpletour.gateway.ctrip.rest.pojo.type.transType.RequestBodyTypeForTransOrder;
 import com.simpletour.gateway.ctrip.util.StringUtils;
 import com.simpletour.gateway.ctrip.util.XMLParseUtil;
 import sun.misc.BASE64Encoder;
@@ -69,11 +71,20 @@ public class Test {
          *产品:10000396,type1
          */
 
-
-//        for (int i = 0; i < 300; i++) {
-//            buildString(SysConfig.CREATE_ORDER_METHOD);
-//        }
+        for (int i = 1; i < 300; i++) {
+            buildString(SysConfig.CREATE_ORDER_METHOD);
+        }
         System.out.println(buildString(SysConfig.CREATE_ORDER_METHOD));
+
+
+        /**
+         * 行程,不包含产品。
+         * 565
+         */
+//        for (int i = 1; i < 300; i++) {
+//            buildStringForCp(SysConfig.TRANS_CREATE_ORDER_METHOD);
+//        }
+//        System.out.println(buildStringForCp(SysConfig.TRANS_CREATE_ORDER_METHOD));
     }
 
     private static String buildString(String serviceName) throws UnsupportedEncodingException, IllegalAccessException, InstantiationException {
@@ -81,16 +92,16 @@ public class Test {
         //1.构造body信息
         RequestBodyType bodyType = new RequestBodyType();
         ExtendInfoType extendInfoType = new ExtendInfoType();
-        extendInfoType.setProductType("2");
+        extendInfoType.setProductType("0");
         bodyType.setExtendInfo(extendInfoType);
-        bodyType.setProductId("10000396");
+        bodyType.setProductId("568");
         bodyType.setPrice("1.00");
-        bodyType.setCount(3);
+        bodyType.setCount(2);
         bodyType.setContactName("偏分偏出三分");
         bodyType.setContactMobile("13011111111");
-        bodyType.setUseDate("2016-03-29");
-        bodyType.setUseEndDate("2016-03-29");
-        bodyType.setOtaOrderId("das"+Random.class.newInstance().nextInt()+"00af343264" + Random.class.newInstance().nextInt() + "a12dad");
+        bodyType.setUseDate("2016-03-04");
+        bodyType.setUseEndDate("2016-03-04");
+        bodyType.setOtaOrderId("234356s" + Random.class.newInstance().nextInt() + "3aa44" + Random.class.newInstance().nextInt() + "aa34dd");
 
         List<PassengerInfo> passengerInfos = new ArrayList<>();
         PassengerInfo passengerInfo = new PassengerInfo();
@@ -141,4 +152,66 @@ public class Test {
         return XMLParseUtil.convertToXml(request);
     }
 
+
+    private static String buildStringForCp(String serviceName) throws UnsupportedEncodingException, IllegalAccessException, InstantiationException {
+        //构造数据
+        //1.构造body信息
+        RequestBodyTypeForTransOrder bodyType = new RequestBodyTypeForTransOrder();
+
+        bodyType.setOtaOrderId("33636" + Random.class.newInstance().nextInt() + "3636ss5" + Random.class.newInstance().nextInt() + "k1w3k");
+        bodyType.setProductId("565");
+        bodyType.setPrice("0.01");
+        bodyType.setCount(2);
+        bodyType.setContactName("偏分偏出三分");
+        bodyType.setContactMobile("13011111111");
+        bodyType.setUseDate("2016-03-06");
+
+        List<com.simpletour.gateway.ctrip.rest.pojo.type.transType.PassengerInfo> passengerInfos = new ArrayList<>();
+        com.simpletour.gateway.ctrip.rest.pojo.type.transType.PassengerInfo passengerInfo = new com.simpletour.gateway.ctrip.rest.pojo.type.transType.PassengerInfo();
+        passengerInfo.setName("马大叔");
+        passengerInfo.setMobile("13111111111");
+        passengerInfo.setCardType("1");
+        passengerInfo.setCardNo("511102199107200011");
+        passengerInfos.add(passengerInfo);
+
+        com.simpletour.gateway.ctrip.rest.pojo.type.transType.PassengerInfo passengerInfo1 = new com.simpletour.gateway.ctrip.rest.pojo.type.transType.PassengerInfo();
+        passengerInfo1.setName("马大叔他大叔");
+        passengerInfo1.setMobile("13111111111");
+        passengerInfo1.setCardType("1");
+        passengerInfo1.setCardNo("511102199107200011");
+        passengerInfos.add(passengerInfo1);
+        bodyType.setPassengerInfos(passengerInfos);
+
+
+        //2.构造header信息
+        RequestHeaderType headerType = new RequestHeaderType();
+        headerType.setAccountId(SysConfig.XIECHENG_CP_SOURCE_ID + "");
+        headerType.setServiceName(serviceName);
+        headerType.setRequestTime("2016-3-22 11:16:31");
+        headerType.setVersion("2.0");
+
+        //组装最后的数据
+        VerifyTransOrderRequest request = new VerifyTransOrderRequest();
+        request.setHeader(headerType);
+        request.setBody(bodyType);
+
+        String xml = XMLParseUtil.convertToXml(request);
+        String xmlBodyString = StringUtils.formatXml(XMLParseUtil.subBodyStringForXml(xml));
+
+        //3.编码sign
+        String xmlBase64 = org.bouncycastle.util.encoders.Base64.toBase64String(xmlBodyString.getBytes("UTF-8"));
+        StringBuffer buffer = new StringBuffer();
+        buffer.append(headerType.getAccountId());
+        buffer.append(headerType.getServiceName());
+        buffer.append(headerType.getRequestTime());
+        buffer.append(xmlBase64);
+        buffer.append(headerType.getVersion());
+        buffer.append("9C1012E99067AA970A972103B2CD3D0C");
+        String sign = MD5.getMD5String(buffer.toString().getBytes()).toLowerCase();
+        headerType.setSign(sign);
+
+        System.out.println("sign:" + sign + ",otaId:" + bodyType.getOtaOrderId());
+
+        return XMLParseUtil.convertToXml(request);
+    }
 }
