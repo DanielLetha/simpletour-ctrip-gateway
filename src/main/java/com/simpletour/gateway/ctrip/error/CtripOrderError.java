@@ -54,7 +54,8 @@ public enum CtripOrderError {
     ORDER_TRANSFER_TO_REQUEST_FAILED("9001", "构造请求异常"),
 
     OPERATE_EXCEPTION("10000", "parse exception"),
-    DATA_PARSE_EXCEPTION("10001", "参数错误,请检查请求参数是否正常");
+    DATA_PARSE_EXCEPTION("10001", "参数错误,请检查请求参数是否正常"),
+    SYSTEM_EXCPTION("10002", "程序异常");
 
     String errorCode;
     String errorMessage;
