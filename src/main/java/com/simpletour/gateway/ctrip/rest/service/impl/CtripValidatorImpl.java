@@ -87,19 +87,23 @@ public class CtripValidatorImpl implements CtripValidator {
             return new VerifyResponse(new ResponseHeaderType(CtripOrderError.SIGN_ERROR));
         }
 
-        switch (requestHeaderType.getServiceName()) {
-            case SysConfig.VERIFY_ORDER_METHOD:
-                return ctripOrderService.verifyOrder(verifyOrderRequest);
-            case SysConfig.CREATE_ORDER_METHOD:
-                return ctripOrderService.createOrder(verifyOrderRequest);
-            case SysConfig.CANCEL_ORDER_METHOD:
-                return ctripOrderService.cancelOrder(verifyOrderRequest);
-            case SysConfig.QUERY_ORDER_METHOD:
-                return ctripOrderService.queryOrder(verifyOrderRequest);
-            case SysConfig.RESEND_METHOD:
-                return ctripOrderService.resend(verifyOrderRequest);
-            default:
-                return new VerifyResponse(new ResponseHeaderType(CtripOrderError.JSON_RESOLVE_FAILED));
+        try {
+            switch (requestHeaderType.getServiceName()) {
+                case SysConfig.VERIFY_ORDER_METHOD:
+                    return ctripOrderService.verifyOrder(verifyOrderRequest);
+                case SysConfig.CREATE_ORDER_METHOD:
+                    return ctripOrderService.createOrder(verifyOrderRequest);
+                case SysConfig.CANCEL_ORDER_METHOD:
+                    return ctripOrderService.cancelOrder(verifyOrderRequest);
+                case SysConfig.QUERY_ORDER_METHOD:
+                    return ctripOrderService.queryOrder(verifyOrderRequest);
+                case SysConfig.RESEND_METHOD:
+                    return ctripOrderService.resend(verifyOrderRequest);
+                default:
+                    return new VerifyResponse(new ResponseHeaderType(CtripOrderError.JSON_RESOLVE_FAILED));
+            }
+        } catch (Exception e) {
+            return new VerifyResponse(new ResponseHeaderType(CtripOrderError.SYSTEM_EXCPTION));
         }
     }
 
@@ -190,17 +194,21 @@ public class CtripValidatorImpl implements CtripValidator {
             return new VerifyResponse(new ResponseHeaderType(CtripTransError.SIGN_ERROR));
         }
 
-        switch (requestHeaderType.getServiceName()) {
-            case SysConfig.TRANS_VERIFY_ORDER_METHOD:
-                return ctripTransService.transVerifyOrder(verifyTransOrderRequest);
-            case SysConfig.TRANS_CREATE_ORDER_METHOD:
-                return ctripTransService.transCreateOrder(verifyTransOrderRequest);
-            case SysConfig.TRANS_QUERY_ORDER_ID_METHOD:
-                return ctripTransService.transQueryOrderById(verifyTransOrderRequest);
-            case SysConfig.TRANS_QUERY_ORDER_LIST_METHOD:
-                return ctripTransService.transQueryOrderList(verifyTransOrderRequest);
-            default:
-                return new VerifyResponse(new ResponseHeaderType(CtripTransError.JSON_RESOLVE_FAILED));
+        try {
+            switch (requestHeaderType.getServiceName()) {
+                case SysConfig.TRANS_VERIFY_ORDER_METHOD:
+                    return ctripTransService.transVerifyOrder(verifyTransOrderRequest);
+                case SysConfig.TRANS_CREATE_ORDER_METHOD:
+                    return ctripTransService.transCreateOrder(verifyTransOrderRequest);
+                case SysConfig.TRANS_QUERY_ORDER_ID_METHOD:
+                    return ctripTransService.transQueryOrderById(verifyTransOrderRequest);
+                case SysConfig.TRANS_QUERY_ORDER_LIST_METHOD:
+                    return ctripTransService.transQueryOrderList(verifyTransOrderRequest);
+                default:
+                    return new VerifyResponse(new ResponseHeaderType(CtripTransError.JSON_RESOLVE_FAILED));
+            }
+        } catch (Exception e) {
+            return new VerifyResponse(new ResponseHeaderType(CtripOrderError.SYSTEM_EXCPTION));
         }
     }
 
