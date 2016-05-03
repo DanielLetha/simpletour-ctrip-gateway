@@ -103,6 +103,7 @@ public class CtripValidatorImpl implements CtripValidator {
                     return new VerifyResponse(new ResponseHeaderType(CtripOrderError.JSON_RESOLVE_FAILED));
             }
         } catch (Exception e) {
+            e.printStackTrace();
             return new VerifyResponse(new ResponseHeaderType(CtripOrderError.SYSTEM_EXCPTION));
         }
     }
@@ -208,6 +209,7 @@ public class CtripValidatorImpl implements CtripValidator {
                     return new VerifyResponse(new ResponseHeaderType(CtripTransError.JSON_RESOLVE_FAILED));
             }
         } catch (Exception e) {
+            e.printStackTrace();
             return new VerifyResponse(new ResponseHeaderType(CtripOrderError.SYSTEM_EXCPTION));
         }
     }
