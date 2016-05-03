@@ -292,7 +292,7 @@ public class CtripOrderServiceImpl implements CtripOrderService {
         try {
             orderOptional = orderService.findOrderById(order.getId());
         } catch (Exception e) {
-            return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.ORDER_ID_NULL), new ResponseBodyType(order.getSourceOrderId(), order.getId().toString()));
+            return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.ORDER_ID_NULL), new ResponseBodyType(order.getSourceOrderId(), String.valueOf(order.getId()) ));
         }
         if (!orderOptional.isPresent()) {
             return new VerifyOrderResponse(new ResponseHeaderType(CtripOrderError.ORDER_QUERY_FAILD), new ResponseBodyType(order.getSourceOrderId(), order.getId().toString()));
